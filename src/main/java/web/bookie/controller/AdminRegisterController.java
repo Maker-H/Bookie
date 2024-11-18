@@ -9,6 +9,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import web.bookie.domain.Book;
 import web.bookie.domain.User;
 
 @Slf4j
@@ -27,8 +28,6 @@ public class AdminRegisterController {
         if (errors.hasErrors()) {
             log.error("User errors: " + errors);
             return "userForm";
-        } else {
-            log.error("no error");
         }
 
         log.info("Register => " + user);
@@ -37,7 +36,18 @@ public class AdminRegisterController {
 
     @GetMapping("/book")
     public String showBookForm(Model model) {
-
+        model.addAttribute("book", new Book());
         return "bookForm";
+    }
+
+    @PostMapping("/book")
+    public String bookRegister(@Valid Book book, Errors errors) {
+        if (errors.hasErrors()) {
+            log.error("Book errors:" + errors);
+            return "bookForm";
+        }
+
+        log.info("Register => " + book);
+        return "home";
     }
 }

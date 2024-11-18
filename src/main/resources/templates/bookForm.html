@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookie User Registeration</title>
+</head>
+<body>
+  <form method="POST"
+        th:object="${book}"
+        enctype="multipart/form-data">
+
+    <h1>enter book info</h1>
+
+    <div th:if="${#fields.hasErrors()}">
+        <span class="validationError">
+            Pleas correct the problems below and resubmit
+        </span>
+    </div>
+
+    <label for="name">Name: </label>
+    <input type="text" th:field="*{bookName}">
+    <span class="validationError"
+          th:if="${#fields.hasErrors('bookName')}"
+          th:errors="*{bookName}">id error</span>
+    <br>
+
+    <label for="author">Author: </label>
+    <input type="text" th:field="*{bookAuthor}">
+    <span class="validationError"
+          th:if="${#fields.hasErrors('bookAuthor')}"
+          th:errors="*{bookAuthor}">id error</span>
+    <br>
+
+    <label for="description">Description: </label>
+    <input type="text" th:field="*{bookDescription}">
+    <br>
+
+    <label for="image">image: </label>
+    <input type="file"  th:field="*{bookImage}">
+    <br>
+
+    <button>submit</button>
+
+  </form>
+</body>
+</html>
