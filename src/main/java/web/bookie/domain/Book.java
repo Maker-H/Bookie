@@ -2,10 +2,13 @@ package web.bookie.domain;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter @Setter
+@NoArgsConstructor
 public class Book {
 
     @NotBlank
@@ -17,6 +20,11 @@ public class Book {
     private String bookDescription;
 
     private MultipartFile bookImage;
+
+    public Book(String bookName, String bookAuthor) {
+        this.bookName = bookName;
+        this.bookAuthor = bookAuthor;
+    }
 
     @Override
     public String toString() {

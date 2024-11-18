@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookie User Registeration</title>
+</head>
+<body>
+
+// TODO:design.html 참고해서 만들기
+  <form method="POST" th:action="@{/admin/register/user}" th:object="${user}">
+    <h1>enter user info</h1>
+
+    <div th:if="${#fields.hasErrors()}">
+        <span class="validationError">
+            Pleas correct the problems below and resubmit
+        </span>
+    </div>
+
+    <label for="id">ID: </label>
+    <input type="text" th:field="*{id}">
+    <span class="validationError"
+          th:if="${#fields.hasErrors('id')}"
+          th:errors="*{id}">id error</span>
+    <br>
+
+    <label for="pwd">PWD: </label>
+    <input type="text" th:field="*{pwd}">
+    <span class="validationError"
+          th:if="${#fields.hasErrors('pwd')}"
+          th:errors="*{pwd}">pwd error</span>
+    <br>
+
+    <button>submit</button>
+
+  </form>
+</body>
+</html>
