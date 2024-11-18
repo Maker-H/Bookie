@@ -5,14 +5,14 @@
     <title>Bookie User Registeration</title>
 </head>
 <body>
-  <form method="POST" th:action="@{/admin/register}" th:object="${user}">
+  <form method="POST" th:action="@{/admin/register/user}" th:object="${user}">
     <h1>enter user info</h1>
 
-    <div th:if="${#fields.hasErrors()}">
-      <span class="validationError">
-        please correct the errors
-      </span>
-    </div>
+<!--    <div th:if="${#fields.hasErrors()}">-->
+<!--        <span class="validationError">-->
+<!--            Pleas correct the problems below and resubmit-->
+<!--        </span>-->
+<!--    </div>-->
 
     <label for="id">ID: </label>
     <input type="text" th:field="*{id}">
@@ -21,13 +21,14 @@
           th:errors="*{id}">id error</span>
     <br>
 
-    <label for="pwd">ID: </label>
+    <label for="pwd">PWD: </label>
     <input type="text" th:field="*{pwd}">
     <span class="validationError"
           th:if="${#fields.hasErrors('pwd')}"
           th:errors="*{pwd}">pwd error</span>
     <br>
 
+    <button>submit</button>
 
   </form>
 </body>
