@@ -1,37 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Bookie User Registeration</title>
+    <title>Review Form</title>
 </head>
 <body>
+<h1>Submit Your Review</h1>
 
-// TODO:design.html 참고해서 만들기
-  <form method="POST" th:action="@{/admin/register/user}" th:object="${user}">
-    <h1>enter user info</h1>
 
-    <div th:if="${#fields.hasErrors()}">
-        <span class="validationError">
-            Pleas correct the problems below and resubmit
-        </span>
+<!--<div th:if="${#fields.hasErrors()}">-->
+<!--        <span class="validationError">-->
+<!--            Pleas correct the problems below and resubmit-->
+<!--        </span>-->
+<!--</div>-->
+
+<!-- 리뷰 폼 -->
+<form th:object="${review}" method="post">
+
+    <!-- 유저 정보 표시 -->
+    <div>
+        <p>User ID: <span th:text="${user.id}" th:value="${review}"></span></p>
+        <input type="hidden" th:field="*{reviewUser}" th:value="${user}" />
     </div>
 
-    <label for="id">ID: </label>
-    <input type="text" th:field="*{id}">
+    <!-- 책 선택 -->
+    <div>
+        <label for="book">Select a Book:</label>
+        <select id="book" th:field="*{book}">
+            <option th:each="book : ${books}"
+                    th:value="${book.bookName}"
+                    th:text="|Title: ${book.bookName}, Author: ${book.bookAuthor}|">
+            </option>
+        </select>
+    </div>
+
+    <!-- 리뷰 입력 -->
+    <div>
+        <label for="reviewText">Write your review:</label>
+        <textarea id="reviewText" th:field="*{review}" rows="4" cols="50"></textarea>
+    </div>
     <span class="validationError"
-          th:if="${#fields.hasErrors('id')}"
-          th:errors="*{id}">id error</span>
+          th:if="${#fields.hasErrors('review')}"
+          th:errors="*{review}">id error</span>
     <br>
 
-    <label for="pwd">PWD: </label>
-    <input type="text" th:field="*{pwd}">
-    <span class="validationError"
-          th:if="${#fields.hasErrors('pwd')}"
-          th:errors="*{pwd}">pwd error</span>
-    <br>
-
-    <button>submit</button>
-
-  </form>
+    <!-- 제출 버튼 -->
+    <button type="submit">Submit Review</button>
+</form>
 </body>
 </html>

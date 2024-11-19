@@ -58,14 +58,21 @@ public class AdminRegisterController {
 
     @GetMapping("/review")
     public String showReviewForm(Model model) {
-        model.addAttribute("user", new User("idid123", "pwdpwd123"));
+        User user = new User("idid123", "pwdpwd123");
+        model.addAttribute("user", user);
 
-        model.addAttribute("book1", new Book("name1", "author1"));
-        model.addAttribute("book2", new Book("name2", "author2"));
-        model.addAttribute("book3", new Book("name3", "author3"));
-        model.addAttribute("book4", new Book("name4", "author4"));
+        List<Book> books = Arrays.asList(
+                new Book("name1", "author1"),
+                new Book("name2", "author2"),
+                new Book("name3", "author3"),
+                new Book("name4", "author4")
+        );
 
-        model.addAttribute("review", new Review());
+        Review review = new Review();
+        review.setReviewUser(user);
+
+        model.addAttribute("books", books);
+        model.addAttribute("review", review);
 
         return "reviewForm";
     }
@@ -74,6 +81,8 @@ public class AdminRegisterController {
     public String reviewRegister(@Valid Review review, Errors errors) {
         if (errors.hasErrors()) {
             log.error("review errors:" + errors);
+            log.info("tmp" + review);
+
             return "reviewForm";
         }
 
