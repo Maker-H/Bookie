@@ -31,9 +31,9 @@ public class Book {
 
         boolean hasImage = (bookImage != null);
 
-        return "[book] name: " + bookName + ", " +
+        return "book {name: " + bookName + ", " +
                 "author: " + bookAuthor + ", " +
                 "hasImage: " + hasImage + ", " +
-                "description: " + bookDescription;
+                "description: " + bookDescription + "}";
     }
 }

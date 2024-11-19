@@ -20,10 +20,9 @@ public class Review {
 
     @Override
     public String toString() {
-        return "[review]" + "\n" +
+        return "review {" + "\n" +
                 user.toString() + "\n" +
                 book.toString() + "\n" +
-                review;
-
+                review + "}";
     }
 }

@@ -24,6 +24,6 @@ public class User {
     private String pwd;
 
     public String toString() {
-       return "[user] id: " + id + ", pwd: " + pwd;
+       return "user {id: " + id + ", pwd: " + pwd + "}";
    }
 }
