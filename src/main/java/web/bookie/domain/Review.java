@@ -2,7 +2,6 @@ package web.bookie.domain;
 
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,21 +10,20 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Review {
 
-    @NotNull(message = "have to choose one user")
-    private User reviewUser;
+    private String userId;
+    private String userPwd;
 
-    @NotNull(message = "have to choose one book")
-    private Book book;
+    private String bookName;
+    private String bookAuthor;
 
     @NotBlank(message = "have to enter review")
     private String review;
 
     @Override
     public String toString() {
-        return "Review{" +
-                "user=" + (reviewUser != null ? reviewUser.getId() : "null") +
-                ", book=" + (book != null ? book.getBookName() : "null") +
-                ", review='" + review + '\'' +
-                '}';
+        return "Review {" +
+                "user=" + userId +
+                ", book=" + bookName +
+                ", review=" + review ;
     }
 }

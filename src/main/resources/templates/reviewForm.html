@@ -19,13 +19,14 @@
     <!-- 유저 정보 표시 -->
     <div>
         <p>User ID: <span th:text="${user.id}" th:value="${review}"></span></p>
-        <input type="hidden" th:field="*{reviewUser}" th:value="${user}" />
+        <input type="hidden" th:field="*{userId}" th:value="${user.id}" />
+        <input type="hidden" th:field="*{userPwd}" th:value="${user.pwd}" />
     </div>
 
     <!-- 책 선택 -->
     <div>
         <label for="book">Select a Book:</label>
-        <select id="book" th:field="*{book}">
+        <select id="book" th:field="*{bookName}">
             <option th:each="book : ${books}"
                     th:value="${book.bookName}"
                     th:text="|Title: ${book.bookName}, Author: ${book.bookAuthor}|">
