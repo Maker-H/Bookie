@@ -14,18 +14,18 @@
         </span>
     </div>
 
-    <label for="id">ID: </label>
-    <input type="text" th:field="*{id}">
+    <label for="userId">ID: </label>
+    <input type="text" th:field="*{userId}">
     <span class="validationError"
-          th:if="${#fields.hasErrors('id')}"
-          th:errors="*{id}">id error</span>
+          th:if="${#fields.hasErrors('userId')}"
+          th:errors="*{userId}">id error</span>
     <br>
 
-    <label for="pwd">PWD: </label>
-    <input type="text" th:field="*{pwd}">
+    <label for="userPwd">PWD: </label>
+    <input type="text" th:field="*{userPwd}">
     <span class="validationError"
-          th:if="${#fields.hasErrors('pwd')}"
-          th:errors="*{pwd}">pwd error</span>
+          th:if="${#fields.hasErrors('userPwd')}"
+          th:errors="*{userPwd}">pwd error</span>
     <br>
 
     <button>submit</button>

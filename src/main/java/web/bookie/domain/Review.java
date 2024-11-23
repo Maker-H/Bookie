@@ -6,24 +6,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter
 @NoArgsConstructor
 public class Review {
 
-    private String userId;
-    private String userPwd;
+    private String uuid;
 
-    private String bookName;
-    private String bookAuthor;
+    private User user;
+    private Book book;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
     @NotBlank(message = "have to enter review")
     private String review;
 
     @Override
     public String toString() {
-        return "Review {" +
-                "user=" + userId +
-                ", book=" + bookName +
-                ", review=" + review ;
+        return "Review { \n" +
+                user + "\n" +
+                book + "\n" +
+                "review=" + review + "}" ;
     }
 }

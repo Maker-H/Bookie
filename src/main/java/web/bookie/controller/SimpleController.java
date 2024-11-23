@@ -10,6 +10,7 @@ public class SimpleController implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/admin").setViewName("home");
+        registry.addViewController("/").setViewName("home");
     }
 
 }

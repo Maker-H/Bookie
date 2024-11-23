@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -15,15 +17,20 @@ import lombok.Setter;
 @NoArgsConstructor
 public class User {
 
+    private String uuid;
+
     @NotBlank(message = "user id is required")
     @Size(min = 3, message = "enter more than 3 char")
-    private String id;
+    private String userId;
 
     @NotBlank(message = "user password is required")
     @Size(min = 3, message = "enter more than 3 char")
-    private String pwd;
+    private String userPwd;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
     public String toString() {
-       return "user {id: " + id + ", pwd: " + pwd + "}";
+        return "user {uuid: " + uuid + ", id: " + userId + ", pwd: " + userPwd + "}";
    }
 }
