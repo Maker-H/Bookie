@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Repository;
 import web.bookie.domain.Review;
 
 import java.sql.Timestamp;
@@ -12,16 +11,17 @@ import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
-public class JdbcReviewRepository implements ReviewRepository{
+//@Repository
+public class ReviewJdbcRepository{
+//public class JdbcReviewRepository implements ReviewRepository{
 
     private JdbcTemplate jdbc;
 
-    public JdbcReviewRepository(JdbcTemplate jdbc) {
+    public ReviewJdbcRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
-    @Override
+//    @Override
     public Review save(Review review) {
         review.setCreatedAt(LocalDateTime.now());
 

@@ -1,14 +1,16 @@
 package web.bookie.data;
 
+import org.springframework.data.repository.CrudRepository;
 import web.bookie.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface UserRepository {
+public interface UserRepository extends CrudRepository<User, Long> {
 
-    public User save(User user);
+//    public User save(User user);
 
-    public List<User> findAll();
+    List<User> findAll();
 
-    User findByUUID(String uuid);
+    Optional<User> findByUuid(long uuid);
 }

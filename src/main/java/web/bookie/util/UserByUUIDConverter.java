@@ -16,6 +16,6 @@ public class UserByUUIDConverter implements Converter<String, User> {
 
     @Override
     public User convert(String uuid) {
-        return userRepository.findByUUID(uuid);
+        return userRepository.findByUuid(Long.parseLong(uuid)).get();
     }
 }

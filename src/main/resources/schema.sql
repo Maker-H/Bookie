@@ -1,6 +1,6 @@
---delete table if exists AppUser;
---delete table if exists Book;
---delete table if exists Review;
+drop table if exists AppUser;
+drop table if exists Book;
+drop table if exists Review;
 
 create table if not exists AppUser (
     uuid identity,

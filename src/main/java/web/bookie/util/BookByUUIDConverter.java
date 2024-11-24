@@ -16,7 +16,7 @@ public class BookByUUIDConverter implements Converter<String, Book> {
 
     @Override
     public Book convert(String uuid) {
-        return bookRepository.findByUUID(uuid);
+        return bookRepository.findByUuid(Long.parseLong(uuid)).get();
     }
 
 }

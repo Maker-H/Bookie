@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Repository;
 import web.bookie.domain.User;
 
 import java.sql.ResultSet;
@@ -15,17 +14,18 @@ import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
-public class JdbcUserRepository implements UserRepository {
+//@Repository
+//public class JdbcUserRepository implements UserRepository {
+public class UserJdbcRepository {
 
     private JdbcTemplate jdbc;
 
     @Autowired
-    public JdbcUserRepository(JdbcTemplate jdbc) {
+    public UserJdbcRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
-    @Override
+//    @Override
     public User save(User user) {
         user.setCreatedAt(LocalDateTime.now());
 
@@ -48,7 +48,7 @@ public class JdbcUserRepository implements UserRepository {
         return user;
     }
 
-    @Override
+//    @Override
     public List<User> findAll() {
         return jdbc.query(
                 "select uuid, userId, userPwd, createdAt from AppUser",
@@ -56,7 +56,7 @@ public class JdbcUserRepository implements UserRepository {
         );
     }
 
-    @Override
+//    @Override
     public User findByUUID(String uuid) {
         return jdbc.queryForObject(
                 "select uuid, userId, userPwd, createdAt from AppUser where uuid=?",
@@ -67,11 +67,10 @@ public class JdbcUserRepository implements UserRepository {
 
     private User mapRowToUser(ResultSet rs, int rowNum) throws SQLException {
         return new User(
-                rs.getString("uuid"),
+                rs.getLong("uuid"),
                 rs.getString("userId"),
                 rs.getString("userPwd"),
-                rs.getTimestamp("createdAt").toLocalDateTime(),
-                null
+                rs.getTimestamp("createdAt").toLocalDateTime()
         );
     }
 }
