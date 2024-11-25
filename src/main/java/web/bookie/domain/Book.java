@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -47,7 +48,17 @@ public class Book {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
+
+    public void addReviews (Review review){
+        if (!this.reviews.contains(review)) {
+            this.reviews.add(review);
+        }
+
+        if (review.getBook() != this) {
+            review.setBook(this);
+        }
+    }
 
     @PrePersist
     private void createdAt() {
@@ -75,7 +86,7 @@ public class Book {
 
         boolean hasImage = (bookImage != null);
 
-        return "book {" +
+        return "Book {" +
                 "uuid: " + uuid + ", " +
                 "name: " + bookName + ", " +
                 "author: " + bookAuthor + ", " +

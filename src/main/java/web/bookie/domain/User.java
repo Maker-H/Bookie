@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,7 +45,17 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
+
+    public void addReviews (Review review){
+        if (!this.reviews.contains(review)) {
+            this.reviews.add(review);
+        }
+
+        if (review.getUser() != this) {
+            review.setUser(this);
+        }
+    }
 
     public User(long uuid, String userId, String userPwd, LocalDateTime createdAt) {
         this.uuid = uuid;

@@ -19,14 +19,6 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long uuid;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_UUID", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "BOOK_UUID", nullable = false)
-    private Book book;
-
     @Column(name = "CREATEDAT", nullable = false)
     private LocalDateTime createdAt;
 
@@ -35,6 +27,30 @@ public class Review {
 
     @NotBlank(message = "have to enter review")
     private String review;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_UUID", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "BOOK_UUID", nullable = false)
+    private Book book;
+
+    public void setUser(User user) {
+        this.user = user;
+
+        if (!user.getReviews().contains(this)) {
+            user.getReviews().add(this);
+        }
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+
+        if (!book.getReviews().contains(this)) {
+            book.getReviews().add(this);
+        }
+    }
 
     @PrePersist
     private void createdAt() {
