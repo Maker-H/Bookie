@@ -1,44 +1,32 @@
 package web.bookie.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Getter @Setter
-@NoArgsConstructor
-@Entity(name = "BOOK")
-public class Book {
+@Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Book extends CommonColumn {
 
-    @Id
-    @Column(name = "UUID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long uuid;
+    private String title;
 
-    @NotBlank
-    @Column(name = "BOOKNAME", nullable = false)
-    private String bookName;
+    private String author;
 
-    @NotBlank
-    @Column(name = "BOOKAUTHOR", nullable = false)
-    private String bookAuthor;
-
-    @Column(name = "BOOKDESCRIPTION")
-    private String bookDescription;
+    private String isbn;
 
     @Lob
-    @Column(name = "BOOKIMAGE")
-    private byte[] bookImage;
+    private String description;
 
-    @Column(name = "CREATEDAT", nullable = false)
-    private LocalDateTime createdAt;
+    private String thumbnailUrl;
 
-    @Column(name = "MODIFIEDAT")
-    private LocalDateTime modifiedAt;
+    private LocalDateTime publishDate;
 
 //    orphanRemoval = true: 부모와 관계가 끊어진 자식 엔티티는 자동으로 삭제.
 //    CascadeType.ALL: 부모 엔티티(Book)의 변경 사항이 자식 엔티티(Review)에 전파됨.
@@ -60,38 +48,32 @@ public class Book {
         }
     }
 
-    @PrePersist
-    private void createdAt() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-    }
 
-    public Book(long uuid, String bookName, String bookAuthor, String bookDescription, byte[] bookImage, LocalDateTime createdAt) {
-        this.uuid = uuid;
-        this.bookName = bookName;
-        this.bookAuthor = bookAuthor;
-        this.bookDescription = bookDescription;
-        this.bookImage = bookImage;
-        this.createdAt = createdAt;
-    }
-
-    public Book(String bookName, String bookAuthor) {
-        this.bookName = bookName;
-        this.bookAuthor = bookAuthor;
-    }
+//    public Book(long uuid, String bookName, String bookAuthor, String bookDescription, byte[] bookImage, LocalDateTime createdAt) {
+//        this.uuid = uuid;
+//        this.bookName = bookName;
+//        this.bookAuthor = bookAuthor;
+//        this.bookDescription = bookDescription;
+//        this.bookImage = bookImage;
+//        this.createdAt = createdAt;
+//    }
+//
+//    public Book(String bookName, String bookAuthor) {
+//        this.bookName = bookName;
+//        this.bookAuthor = bookAuthor;
+//    }
 
     @Override
     public String toString() {
 
-        boolean hasImage = (bookImage != null);
+        boolean hasImage = (thumbnailUrl != null);
 
         return "Book {" +
-                "uuid: " + uuid + ", " +
-                "name: " + bookName + ", " +
-                "author: " + bookAuthor + ", " +
+                "tsid: " + this.getTsid() + ", " +
+                "name: " + title + ", " +
+                "author: " + author + ", " +
                 "hasImage: " + hasImage + ", " +
-                "description: " + bookDescription +
+                "description: " + description +
                 "}";
     }
 }

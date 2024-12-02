@@ -1,39 +1,28 @@
 package web.bookie.domain;
 
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.time.LocalDateTime;
+@Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Review extends CommonColumn {
 
-@Getter @Setter
-@NoArgsConstructor
-@Entity(name = "REVIEW")
-public class Review {
+    private String content;
 
-    @Id
-    @Column(name = "UUID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long uuid;
-
-    @Column(name = "CREATEDAT", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "MODIFIEDAT")
-    private LocalDateTime modifiedAt;
-
-    @NotBlank(message = "have to enter review")
-    private String review;
+    private double rate;
 
     @ManyToOne
-    @JoinColumn(name = "USER_UUID", nullable = false)
+    @JoinColumn(name = "USER_TSID", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "BOOK_UUID", nullable = false)
+    @JoinColumn(name = "BOOK_TSID", nullable = false)
     private Book book;
 
     public void setUser(User user) {
@@ -52,19 +41,14 @@ public class Review {
         }
     }
 
-    @PrePersist
-    private void createdAt() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-    }
 
     @Override
     public String toString() {
         return "Review { \n" +
                 user + "\n" +
                 book + "\n" +
-                "review=" + review + "\n"+
+                "tsid=" + this.getTsid() + "\n" +
+                "content=" + content + "\n"+
                 "}" ;
     }
 }
