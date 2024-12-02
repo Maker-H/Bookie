@@ -10,7 +10,7 @@ import web.bookie.data.UserRepository;
 @DataJpaTest
 @ActiveProfiles("mariatest")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserTest {
+class CommonColumnTest {
 
     @Autowired
     private UserRepository userRepo;
@@ -24,7 +24,16 @@ class UserTest {
         System.out.println(savedUser.getCreatedOn());
 
     }
-    //TODO: 이미 값 들어있는 상태에서 update 쳤을때의 createdOn 테스트
+
+    @Test
+    public void createdOn_테스트() {
+
+    }
+
+    @Test
+    public void modifiedOn_테스트() {
+
+    }
 
 
 }
