@@ -1,9 +1,4 @@
-package web.bookie.util;
-
-import org.springframework.stereotype.Component;
-import web.bookie.data.UserRepository;
-import web.bookie.domain.User;
-import org.springframework.core.convert.converter.Converter;
+package web.bookie.util.mvc;
 
 //@Component
 //public class UserByUUIDConverter implements Converter<String, User> {

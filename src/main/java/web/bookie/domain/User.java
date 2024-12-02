@@ -42,5 +42,5 @@ public class User extends CommonColumn {
 
     public String toString() {
         return "user {tsid: " + this.getTsid() + ", id: " + id + ", pwd: " + password + "}";
-   }
+    }
 }
