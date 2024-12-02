@@ -4,6 +4,7 @@ import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -19,11 +20,17 @@ public class CommonColumn {
 
     private LocalDateTime modifiedOn;
 
+
     @PrePersist
-    private void createdOn() {
+    private void setCreatedOn() {
         if (createdOn == null) {
-            createdOn = LocalDateTime.now();
+            createdOn = LocalDateTime.now().withNano(0);
         }
+    }
+
+    @PreUpdate
+    private void setModifiedOn() {
+        modifiedOn = LocalDateTime.now().withNano(0);;
     }
 
 }

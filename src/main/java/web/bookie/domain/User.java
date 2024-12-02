@@ -39,6 +39,9 @@ public class User extends CommonColumn {
         }
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String toString() {
         return "user {tsid: " + this.getTsid() + ", id: " + id + ", pwd: " + password + "}";
