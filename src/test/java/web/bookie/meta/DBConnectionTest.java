@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 
 @JdbcTest
-@ActiveProfiles("mariatest")
+@ActiveProfiles("h2")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class DBConnectionTest {
 
@@ -27,7 +27,6 @@ class DBConnectionTest {
             Assertions.assertThat(connection).isNotNull();
 
             DatabaseMetaData metaData = connection.getMetaData();
-            Assertions.assertThat(metaData.getUserName()).isEqualTo("bookie_dev");
 
             System.out.println("DB URL: " + metaData.getURL());
             System.out.println("DB Username: " + metaData.getUserName());

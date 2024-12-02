@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 import web.bookie.data.UserRepository;
 
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @DataJpaTest
-@ActiveProfiles("mariatest")
+@ActiveProfiles("h2")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CommonColumnTest {
 
@@ -49,26 +50,33 @@ class CommonColumnTest {
         Assertions.assertEquals(savedCreatedOn, selectUser.get().getCreatedOn());
     }
 
-//    @Test
-//    public void modifiedOn_테스트() {
-//        User user = new User();
-//        User saved = userRepo.save(user);
-//        LocalDateTime savedCreatedOn = saved.getCreatedOn();
-//        String savedTsid = saved.getTsid();
-//
-//        entityManager.flush();
-//        entityManager.clear();
-//
-//        User selectUser = userRepo.findById(savedTsid).get();
-//        selectUser.setPassword("123123");
-//        LocalDateTime modifiedOn = selectUser.getModifiedOn();
-//        entityManager.flush();
-//
-//        System.out.println("user tsid:" + savedTsid);
-//        System.out.println("user modifiedOn:" + modifiedOn);
-//
-//        Assertions.assertEquals(LocalDateTime.now().withNano(0), modifiedOn);
-//    }
+    @Test @Commit
+    public void modifiedOn_테스트() {
+        User user = new User();
+        User saved = userRepo.save(user);
+        LocalDateTime savedCreatedOn = saved.getCreatedOn();
+        String savedTsid = saved.getTsid();
+
+        System.out.println("saved tsid: " + savedTsid);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        User updateUser = userRepo.findById(savedTsid).get();
+        updateUser.setPassword("123123");
+        System.out.println("update tsid: " + savedTsid);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        User selectUser = userRepo.findById(savedTsid).get();
+        LocalDateTime modifiedOn = selectUser.getModifiedOn();
+
+        System.out.println("select tsid: " + savedTsid);
+        System.out.println("user modifiedOn: " + modifiedOn);
+
+        Assertions.assertEquals(LocalDateTime.now().withNano(0), modifiedOn);
+    }
 
 
 }
