@@ -18,7 +18,7 @@ public class Review extends CommonColumn {
     private double rate;
 
     @ManyToOne
-    @JoinColumn(name = "USER_TSID", nullable = false)
+    @JoinColumn(name = "APPUSER_TSID", nullable = false)
     private User user;
 
     @ManyToOne

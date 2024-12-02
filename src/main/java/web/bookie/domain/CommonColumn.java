@@ -2,14 +2,15 @@ package web.bookie.domain;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@MappedSuperclass
 public class CommonColumn {
-
     @Id
     @Tsid
     private String tsid;
