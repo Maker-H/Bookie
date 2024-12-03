@@ -1,0 +1,5 @@
+spring:
+  application.name: bookie
+  profiles.group:
+    memtest: dev-h2, dev-sql
+    devtest: dev-maria, dev-sql

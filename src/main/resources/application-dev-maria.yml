@@ -1,0 +1,19 @@
+spring:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:sqls/maria-schema.sql
+      #data-locations: classpath:sqls/maria-data.sql
+
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/bookie_dev
+    username: bookie_dev
+    password: bookie_dev
+    #hikari:
+      #maximum-pool-size: 10
+      #minimum-idle: 5
+      #idle-timeout: 30000
+      #max-lifetime: 1800000
+
+
+  jpa.properties.hibernate.dialect: org.hibernate.dialect.MariaDBDialect
