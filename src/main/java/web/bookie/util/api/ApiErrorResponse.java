@@ -4,6 +4,7 @@ import lombok.ToString;
 import web.bookie.error.CustomCommonException;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @ToString
@@ -42,8 +43,8 @@ public class ApiErrorResponse {
 
         boolean isTimeEqual;
         if (this.time != null && otherResponse.time != null) {
-            LocalDateTime thisTime = this.time.withSecond(0).withNano(0);
-            LocalDateTime otherTime = otherResponse.time.withSecond(0).withNano(0);
+            LocalDateTime thisTime = this.time.truncatedTo(ChronoUnit.MINUTES);
+            LocalDateTime otherTime = otherResponse.time.truncatedTo(ChronoUnit.MINUTES);
 
             isTimeEqual = thisTime.equals(otherTime);
         } else {
@@ -62,7 +63,7 @@ public class ApiErrorResponse {
                 errorName,
                 errorMessage,
                 errorCode,
-                time != null ? time.withSecond(0).withNano(0) : null
+                time != null ? time.truncatedTo(ChronoUnit.MINUTES) : null
         );
     }
 
