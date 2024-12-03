@@ -1,13 +1,12 @@
 package web.bookie.util.api;
 
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import web.bookie.error.CustomCommonException;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @ToString
-@EqualsAndHashCode
 public class ApiErrorResponse {
 
     private String errorName;
@@ -26,6 +25,45 @@ public class ApiErrorResponse {
         this.errorMessage = e.getErrorMessage();
         this.errorCode = e.getErrorCode();
         this.time = LocalDateTime.now();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ApiErrorResponse otherResponse = (ApiErrorResponse) o;
+
+        boolean isTimeEqual;
+        if (this.time != null && otherResponse.time != null) {
+            LocalDateTime thisTime = this.time.withSecond(0).withNano(0);
+            LocalDateTime otherTime = otherResponse.time.withSecond(0).withNano(0);
+
+            isTimeEqual = thisTime.equals(otherTime);
+        } else {
+            isTimeEqual = (this.time == otherResponse.time);
+        }
+
+        return  Objects.equals(this.errorName, otherResponse.errorName) &&
+                Objects.equals(this.errorMessage, otherResponse.errorMessage) &&
+                this.errorCode == otherResponse.errorCode &&
+                isTimeEqual;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                errorName,
+                errorMessage,
+                errorCode,
+                time != null ? time.withSecond(0).withNano(0) : null
+        );
     }
 
 }
