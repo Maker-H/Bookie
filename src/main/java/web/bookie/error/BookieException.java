@@ -2,7 +2,7 @@ package web.bookie.error;
 
 import org.springframework.http.HttpStatus;
 
-public class BookieException extends Exception implements CustomCommonException{
+public class BookieException extends RuntimeException implements CustomCommonException{
 
     private final String errorName;
     private final HttpStatus statusCode;

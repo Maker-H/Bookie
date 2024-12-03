@@ -8,13 +8,11 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import web.bookie.error.BookieException;
 import web.bookie.error.CustomCommonException;
 
-@ActiveProfiles("memtest")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = ApiResponseBuilderTest.TestConfig.class)
 class ApiResponseBuilderTest {
@@ -42,7 +40,6 @@ class ApiResponseBuilderTest {
         Assertions.assertEquals(expectedBody, actualBody);
     }
 
-    //TODO:
     @Test
     void sendError_커스텀예외_확인() {
         BookieException bookieException = new BookieException(HttpStatus.BAD_REQUEST, "Book", 100, "에러");
