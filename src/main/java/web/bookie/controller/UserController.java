@@ -17,7 +17,7 @@ import web.bookie.util.api.ApiSuccessResponse;
 @RequestMapping(value = "/auth", consumes = "application/json", produces = "application/json")
 public class UserController {
 
-    private final ApiResponseBuilder builder;
+    private final ApiResponseBuilder responseBuilder;
 
     private final UserService userService;
 
@@ -25,7 +25,7 @@ public class UserController {
     public ApiSuccessResponse registerUser(@RequestBody UserRequestDTO request) {
 
         UserResponseDTO userResponseDTO = userService.registerUser(request);
-        return builder.sendSuccess(userResponseDTO);
+        return responseBuilder.sendSuccess(userResponseDTO);
 
     }
 
