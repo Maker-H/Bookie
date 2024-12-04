@@ -1,5 +1,6 @@
 package web.bookie.util.api;
 
+import lombok.Getter;
 import lombok.ToString;
 import web.bookie.error.CustomCommonException;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
+@Getter
 @ToString
 public class ApiErrorResponse {
 
