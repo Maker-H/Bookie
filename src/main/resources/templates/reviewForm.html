@@ -14,38 +14,38 @@
 <!--</div>-->
 
 <!-- 리뷰 폼 -->
-<form th:object="${review}" method="post">
+<form th:object="${reviewEntity}" method="post">
 
     <!-- 유저 정보 표시 -->
     <div>
-        <label for="user">Select a user:</label>
-        <select id="user" th:field="*{user}">
-            <option th:each="user : ${users}"
-                    th:value="${user.uuid}"
-                    th:text="|User id: ${user.userId}">
+        <label for="userEntity">Select a userEntity:</label>
+        <select id="userEntity" th:field="*{userEntity}">
+            <option th:each="userEntity : ${users}"
+                    th:value="${userEntity.uuid}"
+                    th:text="|User id: ${userEntity.userId}">
             </option>
         </select>
     </div>
 
     <!-- 책 선택 -->
     <div>
-        <label for="book">Select a Book:</label>
-        <select id="book" th:field="*{book}">
-            <option th:each="book : ${books}"
-                    th:value="${book.uuid}"
-                    th:text="|Title: ${book.bookName}, Author: ${book.bookAuthor}|">
+        <label for="bookEntity">Select a Book:</label>
+        <select id="bookEntity" th:field="*{bookEntity}">
+            <option th:each="bookEntity : ${books}"
+                    th:value="${bookEntity.uuid}"
+                    th:text="|Title: ${bookEntity.bookName}, Author: ${bookEntity.bookAuthor}|">
             </option>
         </select>
     </div>
 
     <!-- 리뷰 입력 -->
     <div>
-        <label for="reviewText">Write your review:</label>
-        <textarea id="reviewText" th:field="*{review}" rows="4" cols="50"></textarea>
+        <label for="reviewText">Write your reviewEntity:</label>
+        <textarea id="reviewText" th:field="*{reviewEntity}" rows="4" cols="50"></textarea>
     </div>
     <span class="validationError"
-          th:if="${#fields.hasErrors('review')}"
-          th:errors="*{review}">id error</span>
+          th:if="${#fields.hasErrors('reviewEntity')}"
+          th:errors="*{reviewEntity}">id error</span>
     <br>
 
     <!-- 제출 버튼 -->

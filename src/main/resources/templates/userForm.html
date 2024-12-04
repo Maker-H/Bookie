@@ -5,8 +5,8 @@
     <title>Bookie User Registeration</title>
 </head>
 <body>
-  <form method="POST" th:action="@{/admin/register/user}" th:object="${user}">
-    <h1>enter user info</h1>
+  <form method="POST" th:action="@{/admin/register/userEntity}" th:object="${userEntity}">
+    <h1>enter userEntity info</h1>
 
     <div th:if="${#fields.hasErrors()}">
         <span class="validationError">

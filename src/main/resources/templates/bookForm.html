@@ -6,10 +6,10 @@
 </head>
 <body>
   <form method="POST"
-        th:object="${book}"
+        th:object="${bookEntity}"
         enctype="multipart/form-data">
 
-    <h1>enter book info</h1>
+    <h1>enter bookEntity info</h1>
 
     <div th:if="${#fields.hasErrors()}">
         <span class="validationError">
