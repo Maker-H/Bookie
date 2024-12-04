@@ -18,7 +18,7 @@ public class UserService {
     public UserResponseDTO registerUser(UserRequestDTO userRequestDTO) {
         UserEntity user = userRequestDTO.toEntity();
         UserEntity savedUser = userRepository.save(user);
-        return UserResponseDTO.from(savedUser);
+        return savedUser.toDto();
     }
 
 }

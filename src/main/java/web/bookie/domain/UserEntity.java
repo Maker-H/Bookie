@@ -46,7 +46,7 @@ public class UserEntity extends BaseEntity<UserResponseDTO> {
     }
 
     @Override
-    public UserResponseDTO to() {
+    public UserResponseDTO toDto() {
         return UserResponseDTO.builder().userTsid(this.getTsid()).build();
     }
 

@@ -33,6 +33,6 @@ public abstract class BaseEntity<T> {
         modifiedOn = LocalDateTime.now().withNano(0);;
     }
 
-    public abstract T to();
+    public abstract T toDto();
 
 }
