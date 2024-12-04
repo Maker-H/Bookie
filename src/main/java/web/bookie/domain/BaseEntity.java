@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity<T> {
     @Id
     @Tsid
     private String tsid;
@@ -32,5 +32,7 @@ public class BaseEntity {
     private void setModifiedOn() {
         modifiedOn = LocalDateTime.now().withNano(0);;
     }
+
+    public abstract T to();
 
 }

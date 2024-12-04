@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.*;
+import web.bookie.dto.response.UserResponseDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @Entity(name = "APPUSER")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserEntity extends BaseEntity {
+public class UserEntity extends BaseEntity<UserResponseDTO> {
 
     private String id;
 
@@ -42,6 +43,11 @@ public class UserEntity extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public UserResponseDTO to() {
+        return UserResponseDTO.builder().userTsid(this.getTsid()).build();
     }
 
 }

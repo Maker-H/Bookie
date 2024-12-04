@@ -1,9 +1,7 @@
 package web.bookie.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,8 +10,10 @@ import java.util.List;
 
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookEntity extends BaseEntity {
+public class BookEntity extends BaseEntity<U> {
 
     private String title;
 
