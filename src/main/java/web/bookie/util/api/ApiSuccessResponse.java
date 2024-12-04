@@ -1,5 +1,8 @@
 package web.bookie.util.api;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -7,6 +10,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiSuccessResponse<T> {
 
     private T data;

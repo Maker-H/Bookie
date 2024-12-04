@@ -1,5 +1,7 @@
 package web.bookie.util.api;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import web.bookie.error.CustomCommonException;
 
 @Slf4j
 @Component
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiResponseBuilder {
 
     public <T> ApiSuccessResponse sendSuccess(T data) {
