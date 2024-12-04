@@ -6,5 +6,5 @@ import web.bookie.domain.UserEntity;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, String> {
-    Optional<UserEntity> findByIdAndPassword(UserEntity user);
+    Optional<UserEntity> findByIdAndPassword(String id, String password);
 }

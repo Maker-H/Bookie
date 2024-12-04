@@ -26,8 +26,10 @@ public class UserService {
     }
 
     public UserResponseDTO validateUser(UserRequestDTO userRequestDTO) {
-        UserEntity user = userRequestDTO.toEntity();
-        Optional<UserEntity> selectedUser = userRepository.findByIdAndPassword(user);
+        Optional<UserEntity> selectedUser = userRepository.findByIdAndPassword(
+                userRequestDTO.getId(),
+                userRequestDTO.getPassword()
+        );
 
         if (selectedUser.isEmpty()) {
             BookieError.USER_NOT_VALID.throwException();
