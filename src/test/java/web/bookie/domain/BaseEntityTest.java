@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
-import web.bookie.data.UserRepository;
+import web.bookie.respository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @DataJpaTest
 @ActiveProfiles("h2")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class CommonColumnTest {
+class BaseEntityTest {
 
     @Autowired
     private UserRepository userRepo;
@@ -25,18 +25,18 @@ class CommonColumnTest {
 
     @Test
     public void tsid_예제_테스트() {
-        User user = new User();
-        User savedUser = userRepo.save(user);
+        UserEntity userEntity = new UserEntity();
+        UserEntity savedUserEntity = userRepo.save(userEntity);
 
-        System.out.println(savedUser.getTsid());
-        System.out.println(savedUser.getCreatedOn());
+        System.out.println(savedUserEntity.getTsid());
+        System.out.println(savedUserEntity.getCreatedOn());
 
     }
 
     @Test
     public void createdOn_테스트() {
-        User user = new User();
-        User saved = userRepo.save(user);
+        UserEntity userEntity = new UserEntity();
+        UserEntity saved = userRepo.save(userEntity);
         LocalDateTime savedCreatedOn = saved.getCreatedOn();
         String savedTsid = saved.getTsid();
 
@@ -46,14 +46,14 @@ class CommonColumnTest {
         entityManager.flush();
         entityManager.clear();
 
-        Optional<User> selectUser = userRepo.findById(savedTsid);
+        Optional<UserEntity> selectUser = userRepo.findById(savedTsid);
         Assertions.assertEquals(savedCreatedOn, selectUser.get().getCreatedOn());
     }
 
     @Test @Commit
     public void modifiedOn_테스트() {
-        User user = new User();
-        User saved = userRepo.save(user);
+        UserEntity userEntity = new UserEntity();
+        UserEntity saved = userRepo.save(userEntity);
         LocalDateTime savedCreatedOn = saved.getCreatedOn();
         String savedTsid = saved.getTsid();
 
@@ -62,15 +62,15 @@ class CommonColumnTest {
         entityManager.flush();
         entityManager.clear();
 
-        User updateUser = userRepo.findById(savedTsid).get();
-        updateUser.setPassword("123123");
+        UserEntity updateUserEntity = userRepo.findById(savedTsid).get();
+        updateUserEntity.setPassword("123123");
         System.out.println("update tsid: " + savedTsid);
 
         entityManager.flush();
         entityManager.clear();
 
-        User selectUser = userRepo.findById(savedTsid).get();
-        LocalDateTime modifiedOn = selectUser.getModifiedOn();
+        UserEntity selectUserEntity = userRepo.findById(savedTsid).get();
+        LocalDateTime modifiedOn = selectUserEntity.getModifiedOn();
 
         System.out.println("select tsid: " + savedTsid);
         System.out.println("user modifiedOn: " + modifiedOn);

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-public class CommonColumn {
+public class BaseEntity {
     @Id
     @Tsid
     private String tsid;

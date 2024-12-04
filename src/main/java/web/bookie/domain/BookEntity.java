@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Book extends CommonColumn {
+public class BookEntity extends BaseEntity {
 
     private String title;
 
@@ -36,15 +36,15 @@ public class Book extends CommonColumn {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    private List<Review> reviews = new ArrayList<>();
+    private List<ReviewEntity> reviewEntities = new ArrayList<>();
 
-    public void addReviews (Review review){
-        if (!this.reviews.contains(review)) {
-            this.reviews.add(review);
+    public void addReviews (ReviewEntity reviewEntity){
+        if (!this.reviewEntities.contains(reviewEntity)) {
+            this.reviewEntities.add(reviewEntity);
         }
 
-        if (review.getBook() != this) {
-            review.setBook(this);
+        if (reviewEntity.getBookEntity() != this) {
+            reviewEntity.setBookEntity(this);
         }
     }
 

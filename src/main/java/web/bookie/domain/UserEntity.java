@@ -4,18 +4,19 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Getter
+@Builder
+@ToString
 @Entity(name = "APPUSER")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends CommonColumn {
+public class UserEntity extends BaseEntity {
 
     private String id;
 
@@ -27,15 +28,15 @@ public class User extends CommonColumn {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    private List<Review> reviews = new ArrayList<>();
+    private List<ReviewEntity> reviewEntities = new ArrayList<>();
 
-    public void addReviews (Review review){
-        if (!this.reviews.contains(review)) {
-            this.reviews.add(review);
+    public void addReviews (ReviewEntity reviewEntity){
+        if (!this.reviewEntities.contains(reviewEntity)) {
+            this.reviewEntities.add(reviewEntity);
         }
 
-        if (review.getUser() != this) {
-            review.setUser(this);
+        if (reviewEntity.getUserEntity() != this) {
+            reviewEntity.setUserEntity(this);
         }
     }
 
@@ -43,7 +44,4 @@ public class User extends CommonColumn {
         this.password = password;
     }
 
-    public String toString() {
-        return "user {tsid: " + this.getTsid() + ", id: " + id + ", pwd: " + password + "}";
-    }
 }

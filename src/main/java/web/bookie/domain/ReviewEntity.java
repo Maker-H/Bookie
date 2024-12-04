@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review extends CommonColumn {
+public class ReviewEntity extends BaseEntity {
 
     private String content;
 
@@ -19,25 +19,25 @@ public class Review extends CommonColumn {
 
     @ManyToOne
     @JoinColumn(name = "APPUSER_TSID", nullable = false)
-    private User user;
+    private UserEntity userEntity;
 
     @ManyToOne
     @JoinColumn(name = "BOOK_TSID", nullable = false)
-    private Book book;
+    private BookEntity bookEntity;
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
 
-        if (!user.getReviews().contains(this)) {
-            user.getReviews().add(this);
+        if (!userEntity.getReviewEntities().contains(this)) {
+            userEntity.getReviewEntities().add(this);
         }
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setBookEntity(BookEntity bookEntity) {
+        this.bookEntity = bookEntity;
 
-        if (!book.getReviews().contains(this)) {
-            book.getReviews().add(this);
+        if (!bookEntity.getReviewEntities().contains(this)) {
+            bookEntity.getReviewEntities().add(this);
         }
     }
 
@@ -45,8 +45,8 @@ public class Review extends CommonColumn {
     @Override
     public String toString() {
         return "Review { \n" +
-                user + "\n" +
-                book + "\n" +
+                userEntity + "\n" +
+                bookEntity + "\n" +
                 "tsid=" + this.getTsid() + "\n" +
                 "content=" + content + "\n"+
                 "}" ;
