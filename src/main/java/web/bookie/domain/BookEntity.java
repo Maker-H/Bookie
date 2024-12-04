@@ -11,9 +11,10 @@ import java.util.List;
 @Getter
 @Entity
 @Builder
+//@ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookEntity extends BaseEntity<U> {
+public class BookEntity extends BaseEntity<String> {
 
     private String title;
 
@@ -31,7 +32,7 @@ public class BookEntity extends BaseEntity<U> {
 //    orphanRemoval = true: 부모와 관계가 끊어진 자식 엔티티는 자동으로 삭제.
 //    CascadeType.ALL: 부모 엔티티(Book)의 변경 사항이 자식 엔티티(Review)에 전파됨.
     @OneToMany(
-            mappedBy = "book",
+            mappedBy = "bookEntity",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY
@@ -63,17 +64,9 @@ public class BookEntity extends BaseEntity<U> {
 //        this.bookAuthor = bookAuthor;
 //    }
 
+
     @Override
-    public String toString() {
-
-        boolean hasImage = (thumbnailUrl != null);
-
-        return "Book {" +
-                "tsid: " + this.getTsid() + ", " +
-                "name: " + title + ", " +
-                "author: " + author + ", " +
-                "hasImage: " + hasImage + ", " +
-                "description: " + description +
-                "}";
+    public String toResponseDto() {
+        return null;
     }
 }

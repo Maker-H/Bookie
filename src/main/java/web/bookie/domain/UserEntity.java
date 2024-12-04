@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Builder
-@ToString
+//@ToString
 @Entity(name = "APPUSER")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,7 +24,7 @@ public class UserEntity extends BaseEntity<UserResponseDTO> {
     private String password;
 
     @OneToMany(
-            mappedBy = "user",
+            mappedBy = "userEntity",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY

@@ -9,9 +9,10 @@ import lombok.*;
 @Getter
 @Entity
 @Builder
+//@ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReviewEntity extends BaseEntity<U> {
+public class ReviewEntity extends BaseEntity<String> {
 
     private String content;
 
@@ -41,14 +42,8 @@ public class ReviewEntity extends BaseEntity<U> {
         }
     }
 
-
     @Override
-    public String toString() {
-        return "Review { \n" +
-                userEntity + "\n" +
-                bookEntity + "\n" +
-                "tsid=" + this.getTsid() + "\n" +
-                "content=" + content + "\n"+
-                "}" ;
+    public String toResponseDto() {
+        return null;
     }
 }
