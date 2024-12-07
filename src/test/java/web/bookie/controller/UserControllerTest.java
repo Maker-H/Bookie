@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import web.bookie.domain.UserEntity;
 import web.bookie.dto.request.UserRequestDTO;
+import web.bookie.error.AuthError;
 import web.bookie.respository.UserRepository;
 
 import java.util.Optional;
@@ -50,6 +51,15 @@ class UserControllerTest {
         userRequestDTO = new UserRequestDTO();
         userRequestDTO.setId(testId);
         userRequestDTO.setPassword(testPwd);
+    }
+
+    @TestConfiguration
+    public class CustomMockMvcConfig {
+
+        @Bean
+        public MockMvcBuilderCustomizer customMockMvc() {
+            return builder -> builder.alwaysDo(print());
+        }
     }
 
     @Test
@@ -99,15 +109,28 @@ class UserControllerTest {
     }
 
     @Test
-    void validateUser_ShouldReturnExcpetion() {
+    void validateUser_ShouldReturnAuthErrorExcpetion() throws Exception {
+
+        MvcResult result = mockMvc.perform(
+                        post("/auth/validate")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(userRequestDTO))
+                )
+                .andExpect(status().is4xxClientError())
+                .andReturn();
+
+        String jsonResponse = result.getResponse().getContentAsString();
+        JsonNode rootNode = objectMapper.readTree(jsonResponse);
+
+        String errorType = rootNode.path("errorType").asText();
+        String errorName = rootNode.path("errorName").asText();
+        String errorMessage = rootNode.path("errorMessage").asText();
+        int errorCode = rootNode.path("errorCode").asInt();
+
+        assertEquals(AuthError.class.getSimpleName(), errorType);
+        assertEquals(AuthError.USER_NOT_VALID.name(), errorName);
+        assertEquals(AuthError.USER_NOT_VALID.getErrorMsg(), errorMessage);
+        assertEquals(AuthError.USER_NOT_VALID.getErrorCode(), errorCode);
     }
 
-    @TestConfiguration
-    public class CustomMockMvcConfig {
-
-        @Bean
-        public MockMvcBuilderCustomizer customMockMvc() {
-            return builder -> builder.alwaysDo(print());
-        }
-    }
 }

@@ -1,8 +1,10 @@
 package web.bookie.error;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-public enum BookieError {
+@Getter
+public enum AuthError {
 
     USER_NOT_VALID(HttpStatus.BAD_REQUEST, 100, "user is not valid");
 
@@ -10,14 +12,14 @@ public enum BookieError {
     private final int errorCode;
     private final String errorMsg;
 
-    private BookieError(HttpStatus statusCode, int errorCode, String errorMsg) {
+    private AuthError(HttpStatus statusCode, int errorCode, String errorMsg) {
         this.statusCode = statusCode;
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;
     }
 
     public void throwException() throws BookieException {
-        throw new BookieException(statusCode, this.name(), errorCode, errorMsg);
+        throw new BookieException(statusCode, this.getClass().getSimpleName(), this.name(), errorCode, errorMsg);
     }
 
 }

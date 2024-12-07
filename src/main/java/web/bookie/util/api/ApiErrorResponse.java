@@ -12,18 +12,20 @@ import java.util.Objects;
 @ToString
 public class ApiErrorResponse {
 
+    private String errorType;
     private String errorName;
     private String errorMessage;
     private int errorCode;
     private LocalDateTime time;
 
     public ApiErrorResponse(Exception e) {
-        this.errorName = e.getClass().getName();
+        this.errorType = e.getClass().getName();
         this.errorMessage = e.getMessage();
         this.time = LocalDateTime.now();
     }
 
     public ApiErrorResponse(CustomCommonException e) {
+        this.errorType = e.getErrorType();
         this.errorName = e.getErrorName();
         this.errorMessage = e.getErrorMessage();
         this.errorCode = e.getErrorCode();

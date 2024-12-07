@@ -9,16 +9,21 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class BookieException extends RuntimeException implements CustomCommonException{
 
+    private final String errorType;
     private final String errorName;
     private final HttpStatus statusCode;
     private final int errorCode;
 
-     BookieException(HttpStatus statusCode, String errorName, int errorCode, String errorMessage) {
+     BookieException(HttpStatus statusCode, String errorType, String errorName, int errorCode, String errorMessage) {
         super(errorMessage);
+        this.errorType = errorType;
         this.errorName = errorName;
         this.errorCode = errorCode;
         this.statusCode = statusCode;
     }
+
+    @Override
+    public String getErrorType() { return errorType; }
 
     @Override
     public String getErrorName() {
