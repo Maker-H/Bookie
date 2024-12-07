@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import web.bookie.error.AuthError;
 import web.bookie.error.BookieException;
 import web.bookie.error.CustomCommonException;
 
@@ -19,6 +20,10 @@ class ApiResponseBuilderTest {
 
     @Autowired
     ApiResponseBuilder apiResponseBuilder;
+
+    @TestConfiguration
+    @ComponentScan(basePackages = {"web.bookie.util.api", "web.bookie.error"})
+    static class TestConfig {}
 
     @Test
     void sendSuccess() {
@@ -41,9 +46,10 @@ class ApiResponseBuilderTest {
     }
 
     @Test
+    // GlobalExceptionHandlerTest에서 확인
     void sendError_커스텀예외_확인() {
-        //TODO:
-//        BookieException bookieException = new BookieException(HttpStatus.BAD_REQUEST, "Book", 100, "에러");
+
+//        AuthError.USER_NOT_VALID.throwException();
 //
 //        ResponseEntity actualResponse = apiResponseBuilder.sendCustomError(bookieException);
 //        ApiErrorResponse actualBody = (ApiErrorResponse) actualResponse.getBody();
@@ -52,9 +58,5 @@ class ApiResponseBuilderTest {
 //        Assertions.assertEquals(HttpStatus.BAD_REQUEST, actualResponse.getStatusCode());
 //        Assertions.assertEquals(expectedBody, actualBody);
     }
-
-    @TestConfiguration
-    @ComponentScan(basePackages = {"web.bookie.util.api", "web.bookie.error"})
-    static class TestConfig {}
 
 }

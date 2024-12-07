@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 
 @JdbcTest
-@ActiveProfiles("test")
+@ActiveProfiles("memtest")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class DBConnectionTest {
 
