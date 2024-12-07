@@ -55,13 +55,25 @@ class UserControllerTest {
 
     @TestConfiguration
     public class CustomMockMvcConfig {
-
         @Bean
         public MockMvcBuilderCustomizer customMockMvc() {
             return builder -> builder.alwaysDo(print());
         }
     }
 
+    /**
+     * 유저 등록 요청을 검증하는 테스트.
+     *
+     * 프로세스:
+     * 1. GIVEN: /auth/register로 POST 요청 전송.
+     * 2. WHEN: 유효한 사용자 데이터를 등록 요청.
+     * 3. THEN: 응답 상태 코드가 200이고, 응답의 userTsid가 DB의 userTsid와 일치.
+     *
+     * 검증 항목:
+     * - HTTP 상태 코드 (200 OK)
+     * - 응답 데이터의 userTsid와 DB 값 비교
+     * - DB에 유효한 사용자 데이터 저장 여부
+     */
     @Test
     void registerUser_ShouldReturnSuccess() throws Exception {
 
@@ -83,6 +95,18 @@ class UserControllerTest {
 
     }
 
+    /**
+     * 유효한 사용자 데이터를 검증하는 테스트.
+     *
+     * 프로세스:
+     * 1. GIVEN: 사용자 데이터를 DB에 저장
+     * 2. WHEN: /auth/validate로 POST 요청
+     * 3. THEN: 응답 상태 코드가 200이고, 응답의 userTsid가 DB의 userTsid와 일치
+     *
+     * 검증 항목:
+     * - HTTP 상태 코드 (200 OK)
+     * - 응답 데이터의 userTsid와 DB 값 비교
+     */
     @Test
     void validateUser_ShouldReturnSuccess() throws Exception {
 
@@ -108,6 +132,20 @@ class UserControllerTest {
 
     }
 
+    /**
+     * 유효하지 않은 사용자 데이터를 검증할 때 발생하는 예외를 테스트.
+     *
+     * 프로세스:
+     * 1. GIVEN: /auth/validate로 POST 요청 전송.
+     * 2. WHEN: 잘못된 사용자 데이터로 검증 요청.
+     * 3. THEN:
+     *    - 응답 상태 코드가 4xx 에러여야 함.
+     *    - 응답 데이터에서 적절한 에러 타입, 에러 이름, 메시지, 코드 확인.
+     *
+     * 검증 항목:
+     * - HTTP 상태 코드 (4xx Client Error)
+     * - 응답 데이터의 errorType, errorName, errorMessage, errorCode가 올바른지 확인.
+     */
     @Test
     void validateUser_ShouldReturnAuthErrorExcpetion() throws Exception {
 
@@ -131,6 +169,7 @@ class UserControllerTest {
         assertEquals(AuthError.USER_NOT_VALID.name(), errorName);
         assertEquals(AuthError.USER_NOT_VALID.getErrorMsg(), errorMessage);
         assertEquals(AuthError.USER_NOT_VALID.getErrorCode(), errorCode);
+
     }
 
 }
