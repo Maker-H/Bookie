@@ -19,7 +19,9 @@ public class ApiErrorResponse {
     private LocalDateTime time;
 
     public ApiErrorResponse(Exception e) {
-        this.errorType = e.getClass().getName();
+        this.errorType = e.getClass().getSuperclass() != null ?
+                e.getClass().getSuperclass().getSimpleName() : "Exception";
+        this.errorName = e.getClass().getSimpleName();
         this.errorMessage = e.getMessage();
         this.time = LocalDateTime.now();
     }
