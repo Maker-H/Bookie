@@ -11,11 +11,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcBuilderCus
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
+import web.bookie.config.GlobalMockMvcConfig;
 import web.bookie.domain.UserEntity;
 import web.bookie.dto.request.UserRequestDTO;
 import web.bookie.error.AuthError;
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("memtest")
+@Import(GlobalMockMvcConfig.class)
 class UserControllerTest {
 
     @Autowired private MockMvc mockMvc;
@@ -51,14 +54,6 @@ class UserControllerTest {
         userRequestDTO = new UserRequestDTO();
         userRequestDTO.setId(testId);
         userRequestDTO.setPassword(testPwd);
-    }
-
-    @TestConfiguration
-    public class CustomMockMvcConfig {
-        @Bean
-        public MockMvcBuilderCustomizer customMockMvc() {
-            return builder -> builder.alwaysDo(print());
-        }
     }
 
     /**

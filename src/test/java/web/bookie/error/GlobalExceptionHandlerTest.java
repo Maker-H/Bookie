@@ -28,8 +28,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
 @Transactional
+@SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("memtest")
 @Import(GlobalMockMvcConfig.class)
@@ -52,8 +52,6 @@ class GlobalExceptionHandlerTest {
         userRequestDTO.setId(testId);
         userRequestDTO.setPassword(testPwd);
     }
-
-
 
     @Test
     void handleException_ShouldReturnErrorResponse() throws Exception {
