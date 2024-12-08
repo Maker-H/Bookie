@@ -8,24 +8,31 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcBuilderCustomizer;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import web.bookie.config.GlobalMockMvcConfig;
 import web.bookie.dto.request.UserRequestDTO;
 import web.bookie.service.UserService;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
 @ActiveProfiles("memtest")
+@Import(GlobalMockMvcConfig.class)
 class GlobalExceptionHandlerTest {
 
     @MockBean private UserService userService;
@@ -46,8 +53,10 @@ class GlobalExceptionHandlerTest {
         userRequestDTO.setPassword(testPwd);
     }
 
+
+
     @Test
-    void handleSQLException_ShouldReturnErrorResponse() throws Exception {
+    void handleException_ShouldReturnErrorResponse() throws Exception {
         Mockito.when(userService.validateUser(userRequestDTO))
                 .thenThrow(new RuntimeException("Database error"));
 
