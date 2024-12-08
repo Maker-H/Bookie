@@ -1,5 +1,6 @@
 package web.bookie.error;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,10 +11,10 @@ import web.bookie.util.api.ApiResponseBuilder;
 import java.sql.SQLException;
 
 @ControllerAdvice
+@AllArgsConstructor
 public class GlobalExceptionHandler {
 
-    @Autowired
-    ApiResponseBuilder apiResponseBuilder;
+    private final ApiResponseBuilder apiResponseBuilder;
 
     @ExceptionHandler(BookieException.class)
     public ResponseEntity<ApiErrorResponse> handleCustomException(CustomCommonException ex) {
