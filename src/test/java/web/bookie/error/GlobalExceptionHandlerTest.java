@@ -48,9 +48,7 @@ class GlobalExceptionHandlerTest {
         testId = "testId";
         testPwd = "testPwd";
 
-        userRequestDTO = new UserRequestDTO();
-        userRequestDTO.setId(testId);
-        userRequestDTO.setPassword(testPwd);
+        userRequestDTO = UserRequestDTO.getInstance(testId, testPwd);
     }
 
     @Test

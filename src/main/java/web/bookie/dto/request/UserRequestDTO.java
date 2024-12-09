@@ -1,19 +1,30 @@
 package web.bookie.dto.request;
 
-import lombok.Data;
+import lombok.*;
 import web.bookie.domain.UserEntity;
 
 @Data
-public class UserRequestDTO implements BaseRequestDto<UserEntity>{
+@Builder
+public class UserRequestDTO implements BaseRequestDTO<UserEntity> {
 
-    private String id;
+    private final String id;
 
-    private String password;
+    private final String password;
 
     public UserEntity toEntity() {
         return UserEntity.builder()
-                .id(this.getId())
-                .password(this.getPassword())
+                .id(id)
+                .password(password)
+                .build();
+    }
+
+    /*
+    For Test
+    */
+    public static UserRequestDTO getInstance(String id, String password) {
+        return UserRequestDTO.builder()
+                .id(id)
+                .password(password)
                 .build();
     }
 }
