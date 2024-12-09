@@ -22,13 +22,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "/register")
-    public ApiSuccessResponse registerUser(@RequestBody UserRequestDTO request) {
+    public ApiSuccessResponse registerUser(@RequestBody final UserRequestDTO request) {
         UserResponseDTO userResponseDTO = userService.registerUser(request);
         return responseBuilder.sendSuccess(userResponseDTO);
     }
 
     @PostMapping(value = "/validate")
-    public ApiSuccessResponse validateUser(@RequestBody UserRequestDTO request) {
+    public ApiSuccessResponse validateUser(@RequestBody final UserRequestDTO request) {
         UserResponseDTO userResponseDTO = userService.validateUser(request);
         return responseBuilder.sendSuccess(userResponseDTO);
     }

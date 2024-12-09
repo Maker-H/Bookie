@@ -18,13 +18,13 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserResponseDTO registerUser(UserRequestDTO userRequestDTO) {
+    public UserResponseDTO registerUser(final UserRequestDTO userRequestDTO) {
         UserEntity user = userRequestDTO.toEntity();
         UserEntity savedUser = userRepository.save(user);
         return savedUser.toResponseDto();
     }
 
-    public UserResponseDTO validateUser(UserRequestDTO userRequestDTO) {
+    public UserResponseDTO validateUser(final UserRequestDTO userRequestDTO) {
         Optional<UserEntity> selectedUser = userRepository.findByIdAndPassword(
                 userRequestDTO.getId(),
                 userRequestDTO.getPassword()
