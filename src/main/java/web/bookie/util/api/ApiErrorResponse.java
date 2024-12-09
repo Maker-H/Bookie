@@ -2,7 +2,7 @@ package web.bookie.util.api;
 
 import lombok.Getter;
 import lombok.ToString;
-import web.bookie.error.CustomCommonException;
+import web.bookie.exceptions.CustomCommonException;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

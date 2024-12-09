@@ -1,4 +1,4 @@
-package web.bookie.error;
+package web.bookie.exceptions;
 
 import org.springframework.http.HttpStatus;
 

@@ -1,20 +1,21 @@
-package web.bookie.error;
+package web.bookie.exceptions.errors;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
+import web.bookie.exceptions.CustomCommonException;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-public class BookieException extends RuntimeException implements CustomCommonException{
+public class BookieException extends RuntimeException implements CustomCommonException {
 
     private final String errorType;
     private final String errorName;
     private final HttpStatus statusCode;
     private final int errorCode;
 
-     BookieException(HttpStatus statusCode, String errorType, String errorName, int errorCode, String errorMessage) {
+    BookieException(HttpStatus statusCode, String errorType, String errorName, int errorCode, String errorMessage) {
         super(errorMessage);
         this.errorType = errorType;
         this.errorName = errorName;

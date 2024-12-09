@@ -1,4 +1,4 @@
-package web.bookie.error;
+package web.bookie.exceptions.errors;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -20,6 +20,10 @@ public enum AuthError {
 
     public void throwException() throws BookieException {
         throw new BookieException(statusCode, this.getClass().getSimpleName(), this.name(), errorCode, errorMsg);
+    }
+
+    public BookieException toException() {
+        return new BookieException(statusCode, this.getClass().getSimpleName(), this.name(), errorCode, errorMsg);
     }
 
 }

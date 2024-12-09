@@ -10,9 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import web.bookie.error.AuthError;
-import web.bookie.error.BookieException;
-import web.bookie.error.CustomCommonException;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = ApiResponseBuilderTest.TestConfig.class)

@@ -3,8 +3,7 @@ package web.bookie.dto.request;
 import lombok.*;
 import web.bookie.domain.BookEntity;
 
-import web.bookie.domain.UserEntity;
-import web.bookie.error.ParseError;
+import web.bookie.exceptions.errors.ParseError;
 
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;

@@ -1,10 +1,8 @@
 package web.bookie.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +19,7 @@ import web.bookie.config.GlobalMockMvcConfig;
 import web.bookie.domain.BookEntity;
 import web.bookie.dto.request.BookRequestDTO;
 import web.bookie.dto.request.BookRequestDTO.BookRequestDTOBuilder;
-import web.bookie.error.AuthError;
-import web.bookie.error.ParseError;
+import web.bookie.exceptions.errors.ParseError;
 import web.bookie.respository.BookRepository;
 
 import java.util.Optional;

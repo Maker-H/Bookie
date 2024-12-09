@@ -1,10 +1,10 @@
-package web.bookie.error;
+package web.bookie.exceptions;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import web.bookie.exceptions.errors.BookieException;
 import web.bookie.util.api.ApiErrorResponse;
 import web.bookie.util.api.ApiResponseBuilder;
 

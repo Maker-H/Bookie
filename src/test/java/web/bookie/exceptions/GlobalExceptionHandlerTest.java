@@ -1,4 +1,4 @@
-package web.bookie.error;
+package web.bookie.exceptions;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,13 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcBuilderCustomizer;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -53,7 +51,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleException_ShouldReturnErrorResponse() throws Exception {
-        Mockito.when(userService.validateUser(userRequestDTO))
+        Mockito.when(userService.validateUser(userRequestDTO, new MockHttpServletRequest()))
                 .thenThrow(new RuntimeException("Database error"));
 
         MvcResult result = mockMvc.perform(
