@@ -70,8 +70,6 @@ class BookControllerTest {
 
         Optional<BookEntity> selectedBook = bookRepository.findById(savedBookTsid);
         assertTrue(selectedBook.isPresent());
-
-
     }
 
     @Test
@@ -176,7 +174,28 @@ class BookControllerTest {
 
 
     @Test
-    void register_RequestDTO_Description_LOBTest() {
+    void register_RequestDTO_Description_LOBTest() throws Exception {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < 5000; i++) {
+            sb.append("book description");
+        }
+
+        BookRequestDTO bookRequestDTO = bookRequestDTOBuilder.description(sb.toString()).build();
+
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/book/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(bookRequestDTO))
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        String jsonResponse = result.getResponse().getContentAsString();
+        JsonNode rootNode = objectMapper.readTree(jsonResponse);
+        String savedBookTsid = rootNode.path("data").path("bookTsid").asText();
+
+        Optional<BookEntity> selectedBook = bookRepository.findById(savedBookTsid);
+        assertTrue(selectedBook.isPresent());
 
     }
 }
