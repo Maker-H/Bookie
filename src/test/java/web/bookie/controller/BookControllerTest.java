@@ -1,9 +1,11 @@
 package web.bookie.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,11 +21,14 @@ import web.bookie.config.GlobalMockMvcConfig;
 import web.bookie.domain.BookEntity;
 import web.bookie.dto.request.BookRequestDTO;
 import web.bookie.dto.request.BookRequestDTO.BookRequestDTOBuilder;
+import web.bookie.error.AuthError;
+import web.bookie.error.ParseError;
 import web.bookie.respository.BookRepository;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
 @SpringBootTest
@@ -40,8 +45,8 @@ class BookControllerTest {
     static private String author;
     static private BookRequestDTOBuilder bookRequestDTOBuilder;
 
-    @BeforeAll
-    static void before() {
+    @BeforeEach
+    void before() {
         title = "책!!";
         author = "나??";
         bookRequestDTOBuilder = BookRequestDTO.builder(title, author);
@@ -70,14 +75,105 @@ class BookControllerTest {
     }
 
     @Test
-    void register_RequestDTO_PublishDateParsingTest_ShouldSuccess() {
+    void register_BookRequestDTO_PublishDateParsingTest_ShouldSuccess() throws Exception {
+        BookRequestDTO bookRequestDTO = bookRequestDTOBuilder.publishDate("1995/12/20").build();
+
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/book/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(bookRequestDTO))
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        String jsonResponse = result.getResponse().getContentAsString();
+        JsonNode rootNode = objectMapper.readTree(jsonResponse);
+        String savedBookTsid = rootNode.path("data").path("bookTsid").asText();
+
+        Optional<BookEntity> selectedBook = bookRepository.findById(savedBookTsid);
+        assertTrue(selectedBook.isPresent());
 
     }
 
     @Test
-    void register_RequestDTO_PublishDateParsingTest_ThrowError() {
+    void register_BookRequestDTO_PublishDateParsingTest_ConventionError() throws Exception {
+        BookRequestDTO bookRequestDTO = bookRequestDTOBuilder.publishDate("1995/1/2").build();
 
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/book/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(bookRequestDTO))
+                )
+                .andExpect(status().is5xxServerError())
+                .andReturn();
+
+        String jsonResponse = result.getResponse().getContentAsString();
+        JsonNode rootNode = objectMapper.readTree(jsonResponse);
+
+        String errorType = rootNode.path("errorType").asText();
+        String errorName = rootNode.path("errorName").asText();
+        String errorMessage = rootNode.path("errorMessage").asText();
+        int errorCode = rootNode.path("errorCode").asInt();
+
+        assertEquals(ParseError.class.getSimpleName(), errorType);
+        assertEquals(ParseError.PUBLISHDATE_PARSING_ERROR.name(), errorName);
+        assertEquals(ParseError.PUBLISHDATE_PARSING_ERROR.getErrorMsg(), errorMessage);
+        assertEquals(ParseError.PUBLISHDATE_PARSING_ERROR.getErrorCode(), errorCode);
     }
+
+    @Test
+    void register_BookRequestDTO_PublishDateParsingTest_NoSuchElementError() throws Exception {
+        BookRequestDTO bookRequestDTO = bookRequestDTOBuilder.publishDate("1995/12").build();
+
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/book/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(bookRequestDTO))
+                )
+                .andExpect(MockMvcResultMatchers.status().is5xxServerError())
+                .andReturn();
+
+        String jsonResponse = result.getResponse().getContentAsString();
+        JsonNode rootNode = objectMapper.readTree(jsonResponse);
+
+        String errorType = rootNode.path("errorType").asText();
+        String errorName = rootNode.path("errorName").asText();
+        String errorMessage = rootNode.path("errorMessage").asText();
+        int errorCode = rootNode.path("errorCode").asInt();
+
+        assertEquals(ParseError.class.getSimpleName(), errorType);
+        assertEquals(ParseError.PUBLISHDATE_PARSING_ERROR.name(), errorName);
+        assertEquals(ParseError.PUBLISHDATE_PARSING_ERROR.getErrorMsg(), errorMessage);
+        assertEquals(ParseError.PUBLISHDATE_PARSING_ERROR.getErrorCode(), errorCode);
+    }
+
+
+    @Test
+    void register_BookRequestDTO_PublishDateParsingTest_NumberFormatError() throws Exception {
+        BookRequestDTO bookRequestDTO = bookRequestDTOBuilder.publishDate("1995/12/a").build();
+
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/book/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(bookRequestDTO))
+                )
+                .andExpect(MockMvcResultMatchers.status().is5xxServerError())
+                .andReturn();
+
+        String jsonResponse = result.getResponse().getContentAsString();
+        JsonNode rootNode = objectMapper.readTree(jsonResponse);
+
+        String errorType = rootNode.path("errorType").asText();
+        String errorName = rootNode.path("errorName").asText();
+        String errorMessage = rootNode.path("errorMessage").asText();
+        int errorCode = rootNode.path("errorCode").asInt();
+
+        assertEquals(ParseError.class.getSimpleName(), errorType);
+        assertEquals(ParseError.PUBLISHDATE_PARSING_ERROR.name(), errorName);
+        assertEquals(ParseError.PUBLISHDATE_PARSING_ERROR.getErrorMsg(), errorMessage);
+        assertEquals(ParseError.PUBLISHDATE_PARSING_ERROR.getErrorCode(), errorCode);
+    }
+
 
     @Test
     void register_RequestDTO_Description_LOBTest() {
