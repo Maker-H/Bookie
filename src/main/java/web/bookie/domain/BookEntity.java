@@ -2,19 +2,20 @@ package web.bookie.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import web.bookie.dto.request.UserRequestDTO;
+import web.bookie.dto.response.BookResponseDTO;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Getter
 @Entity
-@Builder
-//@ToString
+@Builder(builderMethodName = "hiddenBuilder")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookEntity extends BaseEntity<String> {
+public class BookEntity extends BaseEntity<BookResponseDTO> {
 
     private String title;
 
@@ -22,21 +23,19 @@ public class BookEntity extends BaseEntity<String> {
 
     private String isbn;
 
-    @Lob
-    private String description;
+    @Lob private String description;
 
     private String thumbnailUrl;
 
-    private LocalDateTime publishDate;
+    private String publishDate;
 
-//    orphanRemoval = true: 부모와 관계가 끊어진 자식 엔티티는 자동으로 삭제.
-//    CascadeType.ALL: 부모 엔티티(Book)의 변경 사항이 자식 엔티티(Review)에 전파됨.
     @OneToMany(
             mappedBy = "bookEntity",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
+    @Builder.Default
     private List<ReviewEntity> reviewEntities = new ArrayList<>();
 
     public void addReviews (ReviewEntity reviewEntity){
@@ -47,26 +46,15 @@ public class BookEntity extends BaseEntity<String> {
         if (reviewEntity.getBookEntity() != this) {
             reviewEntity.setBookEntity(this);
         }
+
     }
 
-
-//    public Book(long uuid, String bookName, String bookAuthor, String bookDescription, byte[] bookImage, LocalDateTime createdAt) {
-//        this.uuid = uuid;
-//        this.bookName = bookName;
-//        this.bookAuthor = bookAuthor;
-//        this.bookDescription = bookDescription;
-//        this.bookImage = bookImage;
-//        this.createdAt = createdAt;
-//    }
-//
-//    public Book(String bookName, String bookAuthor) {
-//        this.bookName = bookName;
-//        this.bookAuthor = bookAuthor;
-//    }
-
-
     @Override
-    public String toResponseDto() {
-        return null;
+    public BookResponseDTO toResponseDto() {
+        return BookResponseDTO.getInstance(getTsid());
+    }
+
+    public static BookEntityBuilder builder(String title, String author) {
+        return new BookEntityBuilder().title(title).author(author);
     }
 }
