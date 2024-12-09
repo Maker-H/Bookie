@@ -8,8 +8,6 @@ import java.util.Objects;
 
 @Getter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiSuccessResponse<T> {
 
     private T data;
@@ -19,7 +17,6 @@ public class ApiSuccessResponse<T> {
         this.data = data;
         this.time = LocalDateTime.now();
     }
-
 
     @Override
     public boolean equals(Object o) {
