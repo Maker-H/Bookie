@@ -1,10 +1,8 @@
 package web.bookie.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import web.bookie.dto.request.UserRequestDTO;
 import web.bookie.dto.response.UserResponseDTO;
 import web.bookie.service.UserService;
@@ -27,12 +25,23 @@ public class UserController {
         return responseBuilder.sendSuccess(userResponseDTO);
     }
 
-    @PostMapping(value = "/validate")
-    public ApiSuccessResponse validateUser(@RequestBody final UserRequestDTO request) {
-        UserResponseDTO userResponseDTO = userService.validateUser(request);
+    @PostMapping(value = "/login")
+    public ApiSuccessResponse login(@RequestBody final UserRequestDTO request, HttpServletRequest servletRequest) {
+        UserResponseDTO userResponseDTO = userService.login(request, servletRequest);
         return responseBuilder.sendSuccess(userResponseDTO);
     }
 
+    @PostMapping(value = "/validate")
+    public ApiSuccessResponse validateUser(@RequestBody final UserRequestDTO request, HttpServletRequest servletRequest) {
+        UserResponseDTO userResponseDTO = userService.validateUser(request, servletRequest);
+        return responseBuilder.sendSuccess(userResponseDTO);
+    }
+
+    @GetMapping(value = "/logout", consumes = {})
+    public ApiSuccessResponse logout(HttpServletRequest servletRequest) {
+        userService.logout(servletRequest);
+        return responseBuilder.sendSuccess("success");
+    }
 
 
 }
