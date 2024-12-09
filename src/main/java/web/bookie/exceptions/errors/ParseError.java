@@ -2,6 +2,7 @@ package web.bookie.exceptions.errors;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import web.bookie.exceptions.BookieException;
 
 @Getter
 public enum ParseError {

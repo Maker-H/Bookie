@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import web.bookie.exceptions.errors.BookieException;
 import web.bookie.util.api.ApiErrorResponse;
 import web.bookie.util.api.ApiResponseBuilder;
 
