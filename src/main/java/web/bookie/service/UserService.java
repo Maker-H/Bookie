@@ -20,6 +20,7 @@ import static web.bookie.exceptions.errors.AuthError.USER_NOT_VALID;
 public class UserService {
 
     private final UserRepository userRepository;
+
     private final SessionManager sessionManager;
 
     public UserResponseDTO registerUser(final UserRequestDTO userRequestDTO) {
@@ -30,38 +31,31 @@ public class UserService {
 
     //TODO: test
     public UserResponseDTO login(UserRequestDTO userRequestDTO, HttpServletRequest servletRequest) {
-        Optional<UserEntity> selectedUser = userRepository.findByIdAndPassword(
+        UserEntity selectedUser = userRepository.findByIdAndPassword(
                 userRequestDTO.getId(),
                 userRequestDTO.getPassword()
-        );
+        ).orElseThrow(USER_NOT_VALID::toException);
 
-        if (selectedUser.isEmpty()) {
-            USER_NOT_VALID.throwException();
-        }
 
-        sessionManager.startSession(servletRequest, selectedUser.get());
+        sessionManager.startSession(servletRequest, selectedUser);
 
-        return selectedUser.get().toResponseDto();
+        return selectedUser.toResponseDto();
     }
 
     //TODO: test
     public UserResponseDTO validateUser(final UserRequestDTO userRequestDTO, HttpServletRequest servletRequest) {
-        Optional<UserEntity> selectedUser = userRepository.findByIdAndPassword(
+        UserEntity selectedUser = userRepository.findByIdAndPassword(
                 userRequestDTO.getId(),
                 userRequestDTO.getPassword()
-        );
-
-        if (selectedUser.isEmpty()) {
-            USER_NOT_VALID.throwException();
-        }
+        ).orElseThrow(USER_NOT_VALID::toException);
 
         UserEntity userEntityFromSession = sessionManager.getUserEntityFromSession(servletRequest);
 
-        if (!selectedUser.get().equals(userEntityFromSession)) {
+        if (!selectedUser.equals(userEntityFromSession)) {
             USER_NOT_VALID.throwException();
         }
 
-        return selectedUser.get().toResponseDto();
+        return selectedUser.toResponseDto();
     }
 
     //TODO: test
