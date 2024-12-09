@@ -67,5 +67,9 @@ public class BookRequestDTO implements BaseRequestDTO<BookEntity>{
                 .author(author);
     }
 
+    private static BookRequestDTOBuilder hiddenBuilder() {
+        return new BookRequestDTOBuilder();
+    }
+
 
 }

@@ -57,4 +57,8 @@ public class BookEntity extends BaseEntity<BookResponseDTO> {
     public static BookEntityBuilder builder(String title, String author) {
         return new BookEntityBuilder().title(title).author(author);
     }
+
+    private static BookEntityBuilder hiddenBuilder() {
+        return new BookEntityBuilder();
+    }
 }

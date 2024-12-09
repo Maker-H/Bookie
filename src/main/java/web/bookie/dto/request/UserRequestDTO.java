@@ -4,7 +4,6 @@ import lombok.*;
 import web.bookie.domain.UserEntity;
 
 @Data
-@Builder
 public class UserRequestDTO implements BaseRequestDTO<UserEntity> {
 
     private final String id;
@@ -12,19 +11,15 @@ public class UserRequestDTO implements BaseRequestDTO<UserEntity> {
     private final String password;
 
     public UserEntity toEntity() {
-        return UserEntity.builder()
-                .id(id)
-                .password(password)
-                .build();
+        return UserEntity.builder(id, password).build();
     }
 
+
     /*
-    For Test
+        FOR TEST
     */
     public static UserRequestDTO getInstance(String id, String password) {
-        return UserRequestDTO.builder()
-                .id(id)
-                .password(password)
-                .build();
+        return new UserRequestDTO(id, password);
     }
+
 }

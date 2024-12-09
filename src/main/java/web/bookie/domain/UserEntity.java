@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @Getter
-@Builder
+@Builder(builderMethodName = "hiddenBuilder")
 //@ToString
 @Entity(name = "APPUSER")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -22,13 +22,13 @@ public class UserEntity extends BaseEntity<UserResponseDTO> {
     private String id;
 
     private String password;
-
     @OneToMany(
             mappedBy = "userEntity",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
+    @Builder.Default
     private List<ReviewEntity> reviewEntities = new ArrayList<>();
 
     public void addReviews (ReviewEntity reviewEntity){
@@ -47,7 +47,14 @@ public class UserEntity extends BaseEntity<UserResponseDTO> {
 
     @Override
     public UserResponseDTO toResponseDto() {
-        return UserResponseDTO.builder().userTsid(this.getTsid()).build();
+        return UserResponseDTO.getInstance(getTsid());
     }
 
+    public static UserEntityBuilder builder(String id, String password) {
+        return new UserEntityBuilder().id(id).password(password);
+    }
+
+    private static UserEntityBuilder hiddenBuilder() {
+        return new UserEntityBuilder();
+    }
 }

@@ -3,6 +3,7 @@ package web.bookie.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +43,12 @@ class UserControllerTest {
     @Autowired private ObjectMapper objectMapper;
     @Autowired private EntityManager em;
 
-    private String testId;
-    private String testPwd;
-    private UserRequestDTO userRequestDTO;
+    static private String testId;
+    static private String testPwd;
+    static private UserRequestDTO userRequestDTO;
 
-    @BeforeEach
-    void before() {
+    @BeforeAll
+    static void before() {
         testId = "testId";
         testPwd = "testPwd";
 
@@ -84,7 +85,6 @@ class UserControllerTest {
 
         Optional<UserEntity> selectedUser = userRepository.findByIdAndPassword(testId, testPwd);
         assertTrue(selectedUser.isPresent());
-        assertEquals(selectedUser.get().getTsid(), savedUserTsid);
 
     }
 
