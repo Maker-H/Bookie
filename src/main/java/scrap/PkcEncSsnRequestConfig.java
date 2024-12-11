@@ -1,37 +1,78 @@
 package scrap;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
-import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.client5.http.cookie.BasicCookieStore;
+import org.apache.hc.client5.http.cookie.Cookie;
+import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+
+import java.io.IOException;
+import java.util.List;
+
 
 @Getter
-public class PkcEncSsnRequestConfig extends BaseRequestConfig {
-    private String HTTP_PROTOCOL = "https";
-    private String HTTP_HOST = "www.hometax.go.kr";
-    private String HTTP_ENDPOINT = "/wqAction.do?actionId=ATXPPZXA001R01&screenId=UTXPPABA01";
-    private int HTTP_PORT = 443;
-    private HttpMethod HTTP_METHOD = HttpMethod.POST;
+public class PkcEncSsnRequestConfig extends BaseRequestConfig<PkcEncSsnVO> {
+    private final String HTTP_PROTOCOL = "https";
+    private final String HTTP_HOST = "www.hometax.go.kr";
+    private final String HTTP_ENDPOINT = "/wqAction.do?actionId=ATXPPZXA001R01&screenId=UTXPPABA01";
+    private final int HTTP_PORT = 443;
+    private final HttpMethod HTTP_METHOD = HttpMethod.POST;
 
-    @Override
-    HttpClientContext getHttpClientContext() {
-        return null;
+    {
+        initializeHttpHost();
+        initializeHttpMethod();
+        initializeEntity();
+        initializePkcEncSsnResponseHandler();
     }
-    @Override
-    protected <T> HttpClientResponseHandler<T> getResponseHandler() {
-        return (HttpClientResponseHandler<T>) httpResponse -> {
-            int statusCode = httpResponse.getCode();
-            System.out.println("Status Code: " + statusCode);
 
+    public PkcEncSsnRequestConfig() {
+    }
+
+    public void initializeEntity() {
+        setEntity(new StringEntity("{}<nts<nts>nts>1562rNFE0uv0jPXUbQJjHpHtNe3QFgM9WSNf1YpxIN404"));
+    }
+
+    private void initializePkcEncSsnResponseHandler() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        HttpClientResponseHandler<PkcEncSsnVO> responseHandler = httpResponse -> {
+            final String pckEncSsn;
+            String txpp = "";
+            String wmonid = "";
+
+            int statusCode = httpResponse.getCode();
             if (statusCode >= 200 && statusCode < 300) {
-                String responseContent = EntityUtils.toString(httpResponse.getEntity());
-                System.out.println("Response Content: " + responseContent);
-                return (T) responseContent;
+
+                String jsonResponse = EntityUtils.toString(httpResponse.getEntity());
+                try {
+                    pckEncSsn = objectMapper.readTree(jsonResponse).path("pkcEncSsn").asText();
+                } catch (IOException e) {
+                    throw new IllegalStateException("Failed to parse JSON response: " + e.getMessage(), e);
+                }
+
+                Header[] headers = httpResponse.getHeaders("Set-Cookie");
+                BasicCookieStore basicCookieStore = CookieManager.parseHeaders(headers);
+                List<Cookie> cookies = basicCookieStore.getCookies();
+
+                for (Cookie c : cookies) {
+                    if (c.getName().equals(HomeTax.TXPP.getRealName())) {
+                        txpp = c.getValue();
+                    }
+                    if (c.getName().equals(HomeTax.WMONID.getRealName())) {
+                        wmonid = c.getValue();
+                    }
+                }
+
+                return new PkcEncSsnVO(pckEncSsn, txpp, wmonid);
             } else {
                 throw new IllegalStateException("Unexpected status code: " + statusCode);
             }
         };
+
+        setResponseHandler(responseHandler);
     }
-
-
 }

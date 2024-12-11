@@ -8,29 +8,49 @@ import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 
 public class HttpRequestExecutor {
-    public static <T> T send(HttpHost httpHost,
-                             ClassicHttpRequest httpRequest,
-                             HttpClientContext httpClientContext,
-                             HttpClientResponseHandler<T> responseHandler) {
+
+    public static <T> T execute(HttpHost httpHost,
+                                ClassicHttpRequest httpMethod,
+                                AbstractHttpEntity entity,
+                                HttpClientContext httpClientContext,
+                                HttpClientResponseHandler<T> responseHandler) {
+
+        httpMethod.setEntity(entity);
 
         try (CloseableHttpClient client = HttpClientProvider.getHttpClient()) {
-            return client.execute(httpHost, httpRequest, httpClientContext, responseHandler);
+            return client.execute(httpHost, httpMethod, httpClientContext, responseHandler);
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException("HTTP 요청 실패: " + e.getMessage(), e);
         }
     }
 
-    public static <T> T send(HttpHost httpHost,
-                             ClassicHttpRequest httpRequest,
-                             AbstractHttpEntity entity,
-                             HttpClientContext httpClientContext,
-                             HttpClientResponseHandler<T> responseHandler) {
-
-        httpRequest.setEntity(entity);
+    public static <T> T execute(HttpHost httpHost,
+                                ClassicHttpRequest httpMethod,
+                                HttpClientContext httpClientContext,
+                                HttpClientResponseHandler<T> responseHandler) {
 
         try (CloseableHttpClient client = HttpClientProvider.getHttpClient()) {
-            return client.execute(httpHost, httpRequest, httpClientContext, responseHandler);
+            return client.execute(httpHost, httpMethod, httpClientContext, responseHandler);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException("HTTP 요청 실패: " + e.getMessage(), e);
+        }
+    }
+
+    public static <T> T execute(BaseRequestConfig<T> requestConfig) {
+
+        ClassicHttpRequest httpMethod = requestConfig.getHttpMethod();
+        AbstractHttpEntity entity = requestConfig.getEntity();
+        httpMethod.setEntity(entity);
+
+        HttpHost httpHost = requestConfig.getHttpHost();
+        HttpClientContext clientContext = requestConfig.getClientContext();
+
+        HttpClientResponseHandler<T> responseHandler = requestConfig.getResponseHandler();
+
+        try (CloseableHttpClient client = HttpClientProvider.getHttpClient()) {
+            return client.execute(httpHost, httpMethod, clientContext, responseHandler);
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException("HTTP 요청 실패: " + e.getMessage(), e);
