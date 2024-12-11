@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Actions</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>User Actions</h1>
+<form id="userForm">
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <button type="button" id="loginButton">Login</button>
+    <button type="button" id="signupButton">Sign Up</button>
+    <button type="button" id="validateButton">Validate</button>
+    <button type="button" id="logoutButton">Logout</button>
+</form>
+
+<script>
+    function sendRequest(method, url, data) {
+        axios({
+            method: method,
+            url: url,
+            data: data
+        })
+        .then(response => {
+            alert(`${url} successful`);
+            console.log(`[Response from ${url}]`, response.data);
+        })
+        .catch(error => {
+            alert(`${url} failed: ${error.response.data.errorMessage}`);
+            console.error(`[Error from ${url}]`, error.response);
+        });
+    }
+
+    document.getElementById('loginButton').addEventListener('click', function () {
+        const id = document.getElementById('id').value;
+        const password = document.getElementById('password').value;
+
+        sendRequest('post', '/login', { id, password });
+    });
+
+    document.getElementById('signupButton').addEventListener('click', function () {
+        const id = document.getElementById('id').value;
+        const password = document.getElementById('password').value;
+
+        sendRequest('post', '/signup', { id, password });
+    });
+
+    document.getElementById('validateButton').addEventListener('click', function () {
+        const id = document.getElementById('id').value;
+        const password = document.getElementById('password').value;
+
+        sendRequest('post', '/validate', { id, password });
+    });
+
+    document.getElementById('logoutButton').addEventListener('click', function () {
+        sendRequest('get', '/logout');
+    });
+</script>
+</body>
+</html>
