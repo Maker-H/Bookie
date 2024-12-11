@@ -5,7 +5,28 @@ import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.client5.http.impl.cookie.BasicClientCookie;
 import org.apache.hc.core5.http.Header;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class CookieManager {
+
+    public static Map<String, Cookie> getCookieMap(BasicCookieStore cookieStore) {
+        List<Cookie> cookies = cookieStore.getCookies();
+        Map<String, Cookie> cookieMap = new HashMap<>();
+
+        for (Cookie c : cookies) {
+            cookieMap.put(c.getName(), c);
+        }
+
+        return cookieMap;
+    }
+
+    public static Cookie addHomeTaxCookie(BasicClientCookie cookie) {
+        cookie.setDomain("www.hometax.go.kr");
+        cookie.setPath("/");
+        return cookie;
+    }
 
     public static String getCookieValue(BasicCookieStore cookieStore, String cookieName) {
         return cookieStore.getCookies().stream()
