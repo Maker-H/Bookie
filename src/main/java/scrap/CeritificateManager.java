@@ -26,7 +26,6 @@ public class CeritificateManager {
     String userPassword = "패스워드";
 
     Provider bouncyCastleProvider = new BouncyCastleProvider();
-    Provider bizFrameProvider = new BizFrameProvider();
 
     X509Certificate certificate;
     PrivateKey privateKey;
@@ -37,7 +36,6 @@ public class CeritificateManager {
     private CeritificateManager() {
         try {
             Security.addProvider(bouncyCastleProvider);
-            Security.addProvider(bizFrameProvider);
             initializeCertificate();
             initializePrivateKeyInfo();
         } catch (Exception e) {
@@ -59,11 +57,11 @@ public class CeritificateManager {
 
         try(InputStream inputStream = Files.newInputStream(Paths.get(privateKeyPath))) {
 
-            KeyManager keyManager = KeyManager.getInstance(inputStream);
-            keyManager.decrypt(userPassword);
-
-            rValue =  Base64.getEncoder().encodeToString(keyManager.getRandomNum());
-            privateKey = keyManager.getPrivateKey();
+//            KeyManager keyManager = KeyManager.getInstance(inputStream);
+//            keyManager.decrypt(userPassword);
+//
+//            rValue =  Base64.getEncoder().encodeToString(keyManager.getRandomNum());
+//            privateKey = keyManager.getPrivateKey();
 
         } catch (Exception e) {
             throw new IllegalStateException("error while initializing private key info, wrong password");
@@ -119,9 +117,12 @@ public class CeritificateManager {
     public String getPublicKeyPem() throws CertificateException, IOException {
         StringBuilder publicKeyPemBuilder = new StringBuilder();
 
-        publicKeyPemBuilder.append(X509Factory.BEGIN_CERT).append("\n");
+        String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
+        String END_CERT = "-----END CERTIFICATE-----";
+
+        publicKeyPemBuilder.append(BEGIN_CERT).append("\n");
         publicKeyPemBuilder.append(Base64.getMimeEncoder(64, new byte[]{'\n'}).encodeToString(certificate.getEncoded())).append("\n");
-        publicKeyPemBuilder.append(X509Factory.END_CERT).append("\n");
+        publicKeyPemBuilder.append(END_CERT).append("\n");
 
         return publicKeyPemBuilder.toString();
     }

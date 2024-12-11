@@ -13,7 +13,7 @@ public class HttpRequestExecutor {
                              HttpClientContext httpClientContext,
                              HttpClientResponseHandler<T> responseHandler) {
 
-        try (CloseableHttpClient client = hs.http.HttpClientProvider.getHttpClient()) {
+        try (CloseableHttpClient client = HttpClientProvider.getHttpClient()) {
             return client.execute(httpHost, httpRequest, httpClientContext, responseHandler);
         } catch (Exception e) {
             e.printStackTrace();
@@ -29,7 +29,7 @@ public class HttpRequestExecutor {
 
         httpRequest.setEntity(entity);
 
-        try (CloseableHttpClient client = hs.http.HttpClientProvider.getHttpClient()) {
+        try (CloseableHttpClient client = HttpClientProvider.getHttpClient()) {
             return client.execute(httpHost, httpRequest, httpClientContext, responseHandler);
         } catch (Exception e) {
             e.printStackTrace();
