@@ -1,10 +1,8 @@
 package scrap;
 
-import kr.co.bizframe.security.jce.provider.BizFrameProvider;
-import kr.co.bizframe.security.npki.key.KeyManager;
+
 import lombok.Getter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import sun.security.provider.X509Factory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +28,8 @@ public class CeritificateManager {
     X509Certificate certificate;
     PrivateKey privateKey;
 
-    @Getter String rValue;
+    @Getter
+    String rValue;
     @Getter static CeritificateManager instance = new CeritificateManager();
 
     private CeritificateManager() {

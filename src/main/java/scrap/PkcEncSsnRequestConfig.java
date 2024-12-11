@@ -59,12 +59,7 @@ public class PkcEncSsnRequestConfig extends BaseRequestConfig<PkcEncSsnVO> {
                 List<Cookie> cookies = basicCookieStore.getCookies();
 
                 for (Cookie c : cookies) {
-                    if (c.getName().equals(HomeTax.TXPP.getRealName())) {
-                        txpp = c.getValue();
-                    }
-                    if (c.getName().equals(HomeTax.WMONID.getRealName())) {
-                        wmonid = c.getValue();
-                    }
+
                 }
 
                 return new PkcEncSsnVO(pckEncSsn, txpp, wmonid);
