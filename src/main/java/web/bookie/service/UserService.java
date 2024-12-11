@@ -28,13 +28,11 @@ public class UserService {
         return savedUser.toResponseDto();
     }
 
-    //TODO: test
     public UserResponseDTO login(UserRequestDTO userRequestDTO, HttpServletRequest servletRequest) {
-        UserEntity selectedUser = userRepository.findByIdAndPassword(
+        UserEntity selectedUser = findUserOrThrow(
                 userRequestDTO.getId(),
                 userRequestDTO.getPassword()
-        ).orElseThrow(USER_NOT_VALID::toException);
-
+        );
 
         sessionManager.startSession(servletRequest, selectedUser);
 
@@ -42,10 +40,10 @@ public class UserService {
     }
 
     public UserResponseDTO validateUser(final UserRequestDTO userRequestDTO, HttpServletRequest servletRequest) {
-        UserEntity selectedUser = userRepository.findByIdAndPassword(
+        UserEntity selectedUser = findUserOrThrow(
                 userRequestDTO.getId(),
                 userRequestDTO.getPassword()
-        ).orElseThrow(USER_NOT_VALID::toException);
+        );
 
         UserEntity userEntityFromSession = sessionManager.getUserEntityFromSession(servletRequest);
 
@@ -56,14 +54,12 @@ public class UserService {
         return selectedUser.toResponseDto();
     }
 
-    //TODO: test
     public void logout(HttpServletRequest servletRequest) {
         sessionManager.invalidateSession(servletRequest);
     }
 
-    //TODO: refac
     private UserEntity findUserOrThrow(final String id, final String password) {
         return userRepository.findByIdAndPassword(id, password)
-                .orElseThrow();
+                .orElseThrow(USER_NOT_VALID :: toException);
     }
 }
