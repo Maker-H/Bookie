@@ -37,7 +37,7 @@ public class UserController {
         return responseBuilder.sendSuccess(userResponseDTO);
     }
 
-    @GetMapping(value = "/logout", consumes = {})
+    @GetMapping(value = "/logout")
     public ApiSuccessResponse logout(HttpServletRequest servletRequest) {
         userService.logout(servletRequest);
         return responseBuilder.sendSuccess("success");

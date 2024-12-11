@@ -20,7 +20,6 @@ import static web.bookie.exceptions.errors.AuthError.USER_NOT_VALID;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final SessionManager sessionManager;
 
     public UserResponseDTO registerUser(final UserRequestDTO userRequestDTO) {
@@ -42,7 +41,6 @@ public class UserService {
         return selectedUser.toResponseDto();
     }
 
-    //TODO: test
     public UserResponseDTO validateUser(final UserRequestDTO userRequestDTO, HttpServletRequest servletRequest) {
         UserEntity selectedUser = userRepository.findByIdAndPassword(
                 userRequestDTO.getId(),
