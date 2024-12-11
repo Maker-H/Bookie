@@ -1,9 +1,9 @@
 package scrap.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import hs.http.HttpMethod;
 import lombok.Getter;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import scrap.http.HttpMethod;
 
 @Getter
 public class TestConfig extends BaseRequestConfig<JsonNode> {

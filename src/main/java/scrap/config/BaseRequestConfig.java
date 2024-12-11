@@ -1,9 +1,6 @@
 package scrap.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hs.http.HttpMethod;
-import hs.http.HttpResponseWrapper;
-import hs.util.CookieManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
@@ -14,6 +11,9 @@ import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import scrap.http.HttpMethod;
+import scrap.http.HttpResponseWrapper;
+import scrap.util.CookieManager;
 
 import java.io.IOException;
 import java.util.function.Function;
