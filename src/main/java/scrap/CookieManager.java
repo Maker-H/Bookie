@@ -1,10 +1,19 @@
 package scrap;
 
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
+import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.client5.http.impl.cookie.BasicClientCookie;
 import org.apache.hc.core5.http.Header;
 
 public class CookieManager {
+
+    public static String getCookieValue(BasicCookieStore cookieStore, String cookieName) {
+        return cookieStore.getCookies().stream()
+                .filter(cookie -> cookie.getName().equals(cookieName))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElse("");
+    }
 
     public static BasicCookieStore parseHeaders(Header[] headers) {
 

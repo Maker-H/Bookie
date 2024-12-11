@@ -7,14 +7,13 @@ import org.apache.hc.client5.http.cookie.BasicCookieStore;
 import org.apache.hc.client5.http.cookie.CookieStore;
 import org.apache.hc.client5.http.impl.cookie.BasicClientCookie;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.*;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 
 public abstract class BaseRequestConfig<T> {
@@ -40,73 +39,66 @@ public abstract class BaseRequestConfig<T> {
             Class<?> methodClass = Class.forName(getHTTP_METHOD().getClassName());
             httpMethod = (ClassicHttpRequest)
                     methodClass.getConstructor(String.class)
-                    .newInstance(getHTTP_ENDPOINT());
+                            .newInstance(getHTTP_ENDPOINT());
         } catch (Exception e) {
             throw new IllegalStateException("Failed to create HTTP method instance: " + e.getMessage(), e);
         }
     }
 
-    protected void initializeStringResponseHandler() {
-
-        @SuppressWarnings("unchecked")
-        HttpClientResponseHandler<T> responseHandler = httpResponse -> {
+    protected void createBaseResponseHandler(Function<ClassicHttpResponse, T> handlerFunction) {
+        this.responseHandler = httpResponse -> {
             int statusCode = httpResponse.getCode();
             if (statusCode >= 200 && statusCode < 300) {
-                return (T) EntityUtils.toString(httpResponse.getEntity());
+                return handlerFunction.apply(httpResponse);
             } else {
                 throw new IllegalStateException("Unexpected status code: " + statusCode);
             }
         };
-
-        this.responseHandler = responseHandler;
     }
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
-    private static CookieStore basicCookieStore = new BasicCookieStore();
+    protected void initializeStringResponseHandler() {
+
+        Function<ClassicHttpResponse, T> stringFunction = httpResponse -> {
+            try {
+                return (T) EntityUtils.toString(httpResponse.getEntity());
+            } catch (IOException | ParseException e) {
+                throw new IllegalStateException("Failed to parse String response: " + e.getMessage(), e);
+            }
+        };
+
+        createBaseResponseHandler(stringFunction);
+
+    }
+
 
     protected void initializeJsonNodeResponseHandler() {
 
-        @SuppressWarnings("unchecked")
-        HttpClientResponseHandler<T> responseHandler = httpResponse -> {
-            int statusCode = httpResponse.getCode();
-            if (statusCode >= 200 && statusCode < 300) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Function<ClassicHttpResponse, T> jsonFunction = httpResponse -> {
+            try {
                 String jsonResponse = EntityUtils.toString(httpResponse.getEntity());
-                try {
-                    return (T) objectMapper.readTree(jsonResponse);
-                } catch (IOException e) {
-                    throw new IllegalStateException("Failed to parse JSON response: " + e.getMessage(), e);
-                }
-            } else {
-                throw new IllegalStateException("Unexpected status code: " + statusCode);
+                return (T) objectMapper.readTree(jsonResponse);
+            } catch (IOException | ParseException e) {
+                throw new IllegalStateException("Failed to parse JSON response: " + e.getMessage(), e);
             }
         };
 
-        this.responseHandler = responseHandler;
+        createBaseResponseHandler(jsonFunction);
+
     }
 
     protected void initializeCookieResponseHandler() {
 
-        HttpClientResponseHandler<T> responseHandler = httpResponse -> {
-            int statusCode = httpResponse.getCode();
-            if (statusCode >= 200 && statusCode < 300) {
+        Function<ClassicHttpResponse, T> cookieResponse = httpResponse -> {
+            Header[] headers = httpResponse.getHeaders("Set-Cookie");
+            BasicCookieStore basicCookieStore = CookieManager.parseHeaders(headers);
 
-                Header[] headers = httpResponse.getHeaders("Set-Cookie");
-
-                for (Header header : headers) {
-                    String cookieValue = header.getValue();
-
-                    BasicClientCookie cookie = CookieManager.parseString(cookieValue);
-                    basicCookieStore.addCookie(cookie);
-                }
-
-                return (T) basicCookieStore;
-
-            } else {
-                throw new IllegalStateException("Unexpected status code: " + statusCode);
-            }
+            return (T) basicCookieStore;
         };
 
-        this.responseHandler = responseHandler;
+        createBaseResponseHandler(cookieResponse);
+
     }
 
 }
