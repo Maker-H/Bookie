@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import web.bookie.config.GlobalMockMvcConfig;
 import web.bookie.dto.request.UserRequestDTO;
+import web.bookie.dto.response.UserResponseDTO;
 import web.bookie.service.UserService;
 
 
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(GlobalMockMvcConfig.class)
 class GlobalExceptionHandlerTest {
 
-    @MockBean private UserService userService;
+    @MockBean private UserService<UserRequestDTO, UserResponseDTO> userService;
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 

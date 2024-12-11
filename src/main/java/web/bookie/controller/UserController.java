@@ -17,7 +17,7 @@ public class UserController {
 
     private final ApiResponseBuilder responseBuilder;
 
-    private final UserService userService;
+    private final UserService<UserRequestDTO, UserResponseDTO> userService;
 
     @PostMapping(value = "/register")
     public ApiSuccessResponse registerUser(@RequestBody final UserRequestDTO request) {
