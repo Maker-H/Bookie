@@ -1,6 +1,13 @@
-package scrap;
+package scrap.config;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import hs.http.HttpMethod;
+import hs.http.HttpRequestExecutor;
+import hs.http.HttpResponseWrapper;
+import hs.type.HomeTax;
+import hs.util.CeritificateManager;
+import hs.util.CookieManager;
+import hs.vo.NpkiVO;
+import hs.vo.PkcEncSsnVO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
@@ -8,6 +15,7 @@ import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.cookie.BasicClientCookie;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 import java.io.IOException;
@@ -15,10 +23,11 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Map;
+import java.util.function.Function;
 
 
 @Getter(value = AccessLevel.PACKAGE)
-public class NpkiRequestConfig extends BaseRequestConfig<JsonNode> {
+public class NpkiRequestConfig extends BaseRequestConfig<NpkiVO> {
 
     private final String HTTP_PROTOCOL = "https";
     private final String HTTP_HOST = "www.hometax.go.kr";
@@ -29,21 +38,48 @@ public class NpkiRequestConfig extends BaseRequestConfig<JsonNode> {
     {
         initializeHttpHost();
         initializeHttpMethod();
-        initializeJsonNodeResponseHandler();
+        initializeStringResponseHandler();
     }
 
-    public NpkiRequestConfig() {
-        final PkcEncSsnVO pkcEncSsnVO = HttpRequestExecutor.execute(new PkcEncSsnRequestConfig());
+    private NpkiRequestConfig() {}
+
+    private NpkiRequestConfig(PkcEncSsnVO pkcEncSsnVO) {
         initializeEntity(pkcEncSsnVO.getPkcEncSsn());
-        initializeClientContext(pkcEncSsnVO);
+        initializeClientContext(pkcEncSsnVO.getCookieMap());
     }
 
-    private void initializeClientContext(PkcEncSsnVO pkcEncSsnVO) {
+    public static NpkiRequestConfig createWithPkcEncSsn() {
+        PkcEncSsnVO pkcEncSsnVO = HttpRequestExecutor.execute(new PkcEncSsnRequestConfig());
+        return new NpkiRequestConfig(pkcEncSsnVO);
+    }
+
+    public static NpkiRequestConfig createWithExistingPkcEncSsn(PkcEncSsnVO pkcEncSsnVO) {
+        return new NpkiRequestConfig(pkcEncSsnVO);
+    }
+
+    protected void initializeNpkiResponseHandler() {
+
+        Function<HttpResponseWrapper, NpkiVO> npkiResponse = responseWrapper -> {
+            Header[] headers = responseWrapper.getHeaders("Set-Cookie");
+            BasicCookieStore npkiCookieStore = CookieManager.parseHeaders(headers);
+
+            final String txpp = CookieManager.getCookieValue(npkiCookieStore, HomeTax.TXPPsessionID.name());
+            final String wmonid = CookieManager.getCookieValue(npkiCookieStore, HomeTax.WMONID.name());
+
+            Map<String, Cookie> cookieMap = CookieManager.getCookieMap(npkiCookieStore);
+
+            return new NpkiVO(txpp, wmonid, cookieMap);
+        };
+
+        createBaseResponseHandler(npkiResponse);
+
+    }
+
+    private void initializeClientContext(Map<String, Cookie> pckCookieMap) {
 
         BasicCookieStore cookieStore = new BasicCookieStore();
 
-        Map<String, Cookie> pkcEncCookieMap = pkcEncSsnVO.getCookieMap();
-        for (Cookie c : pkcEncCookieMap.values()) {
+        for (Cookie c : pckCookieMap.values()) {
             cookieStore.addCookie(c);
         }
 
@@ -70,17 +106,17 @@ public class NpkiRequestConfig extends BaseRequestConfig<JsonNode> {
 
             setEntity(new UrlEncodedFormEntity(
                         Arrays.asList(
-                                new BasicNameValuePair("cert", certManager.getPublicKeyPem()),
                                 new BasicNameValuePair("logSgnt", Base64.getEncoder().encodeToString(logSignature.getBytes())),
-                                new BasicNameValuePair("pkcLgnClCd", "04"),
+                                new BasicNameValuePair("randomEnc", certManager.getRValue()),
+                                new BasicNameValuePair("cert", certManager.getPublicKeyPem()),
                                 new BasicNameValuePair("pkcLoginYnImpv", "Y"),
-                                new BasicNameValuePair("randomEnc", certManager.getRValue())
+                                new BasicNameValuePair("pkcLgnClCd", "04")
                         )
                     )
             );
 
         } catch (GeneralSecurityException | IOException e) {
-            throw new RuntimeException("error when making request entity in npkirequest");
+            throw new RuntimeException("error when making request entity in npki request");
         }
     }
 

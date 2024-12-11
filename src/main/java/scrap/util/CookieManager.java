@@ -1,4 +1,4 @@
-package scrap;
+package scrap.util;
 
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
 import org.apache.hc.client5.http.cookie.Cookie;
@@ -41,6 +41,10 @@ public class CookieManager {
         BasicCookieStore basicCookieStore = new BasicCookieStore();
 
         for (Header header : headers) {
+            if (!header.getName().equals("Set-Cookie")) {
+                throw new IllegalStateException("cookie manager got wrong header, have to be 'Set-Cookie' header");
+            }
+
             String cookieValue = header.getValue();
 
             BasicClientCookie cookie = CookieManager.parseString(cookieValue);

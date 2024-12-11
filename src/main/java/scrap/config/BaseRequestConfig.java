@@ -1,13 +1,16 @@
-package scrap;
+package scrap.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hs.http.HttpMethod;
+import hs.http.HttpResponseWrapper;
+import hs.util.CookieManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
-import org.apache.hc.client5.http.cookie.CookieStore;
-import org.apache.hc.client5.http.impl.cookie.BasicClientCookie;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.core5.http.*;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
@@ -30,6 +33,8 @@ public abstract class BaseRequestConfig<T> {
     @Getter @Setter private HttpClientContext clientContext;
     @Getter @Setter private HttpClientResponseHandler<T> responseHandler;
 
+    ObjectMapper objectMapper = new ObjectMapper();
+
     protected void initializeHttpHost() {
         httpHost = new HttpHost(getHTTP_PROTOCOL(), getHTTP_HOST(), getHTTP_PORT());
     }
@@ -39,17 +44,27 @@ public abstract class BaseRequestConfig<T> {
             Class<?> methodClass = Class.forName(getHTTP_METHOD().getClassName());
             httpMethod = (ClassicHttpRequest)
                     methodClass.getConstructor(String.class)
-                            .newInstance(getHTTP_ENDPOINT());
+                    .newInstance(getHTTP_ENDPOINT());
         } catch (Exception e) {
             throw new IllegalStateException("Failed to create HTTP method instance: " + e.getMessage(), e);
         }
     }
 
-    protected void createBaseResponseHandler(Function<ClassicHttpResponse, T> handlerFunction) {
+    protected void createBaseResponseHandler(Function<HttpResponseWrapper, T> handlerFunction) {
         this.responseHandler = httpResponse -> {
-            int statusCode = httpResponse.getCode();
+
+            // 로그 출력: 상태 코드
+            HttpResponseWrapper httpResponseWrapper = new HttpResponseWrapper(
+                    httpResponse.getCode(),
+                    httpResponse.getHeaders(),
+                    EntityUtils.toString(httpResponse.getEntity())
+            );
+
+            httpResponseWrapper.printLog();
+
+            int statusCode = httpResponseWrapper.getCode();
             if (statusCode >= 200 && statusCode < 300) {
-                return handlerFunction.apply(httpResponse);
+                return handlerFunction.apply(httpResponseWrapper);
             } else {
                 throw new IllegalStateException("Unexpected status code: " + statusCode);
             }
@@ -58,28 +73,19 @@ public abstract class BaseRequestConfig<T> {
 
     protected void initializeStringResponseHandler() {
 
-        Function<ClassicHttpResponse, T> stringFunction = httpResponse -> {
-            try {
-                return (T) EntityUtils.toString(httpResponse.getEntity());
-            } catch (IOException | ParseException e) {
-                throw new IllegalStateException("Failed to parse String response: " + e.getMessage(), e);
-            }
-        };
+        Function<HttpResponseWrapper, T> stringFunction = responseWrapper -> (T) responseWrapper.getResponseBody();
 
         createBaseResponseHandler(stringFunction);
 
     }
 
-
     protected void initializeJsonNodeResponseHandler() {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        Function<ClassicHttpResponse, T> jsonFunction = httpResponse -> {
+        Function<HttpResponseWrapper, T> jsonFunction = responseWrapper -> {
             try {
-                String jsonResponse = EntityUtils.toString(httpResponse.getEntity());
+                String jsonResponse = responseWrapper.getResponseBody();
                 return (T) objectMapper.readTree(jsonResponse);
-            } catch (IOException | ParseException e) {
+            } catch (IOException e) {
                 throw new IllegalStateException("Failed to parse JSON response: " + e.getMessage(), e);
             }
         };
@@ -90,8 +96,8 @@ public abstract class BaseRequestConfig<T> {
 
     protected void initializeCookieResponseHandler() {
 
-        Function<ClassicHttpResponse, T> cookieResponse = httpResponse -> {
-            Header[] headers = httpResponse.getHeaders("Set-Cookie");
+        Function<HttpResponseWrapper, T> cookieResponse = responseWrapper -> {
+            Header[] headers = responseWrapper.getHeaders("Set-Cookie");
             BasicCookieStore basicCookieStore = CookieManager.parseHeaders(headers);
 
             return (T) basicCookieStore;

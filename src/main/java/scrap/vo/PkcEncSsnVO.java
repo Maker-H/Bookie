@@ -1,4 +1,4 @@
-package scrap;
+package scrap.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,24 +12,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class PkcEncSsnVO {
 
-
     private final String pkcEncSsn;
     private final String TXPPsessionID;
     private final String WMONID;
     private final Map<String, Cookie> cookieMap;
-
-
-//    public enum Pkc {
-//        PKC_ENC_SSN("pkcEncSsn"),
-//        TXPP("TXPPsessionID"),
-//        WMONID("WMONID");
-//
-//        @Getter private final String realName;
-//
-//        // Enum 생성자
-//        Pck(String realName) {
-//            this.realName = realName;
-//        }
-//    }
 
 }

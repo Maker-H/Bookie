@@ -1,8 +1,9 @@
-package scrap;
+package scrap.util;
 
-
+import kr.co.bizframe.security.npki.key.KeyManager;
 import lombok.Getter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import sun.security.provider.X509Factory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,22 +20,23 @@ import java.util.Base64;
 
 public class CeritificateManager {
 
-    String certFilePath = "./cert/signCert.der";
-    String privateKeyPath = "./cert/signPri.key";
-    String userPassword = "패스워드";
+    String certFilePath = "D:\\npki\\heesom_npki\\signCert.der";
+    String privateKeyPath = "D:\\npki\\heesom_npki\\signPri.key";
+    String userPassword = "goflvhxj0*";
 
     Provider bouncyCastleProvider = new BouncyCastleProvider();
+//    Provider bizFrameProvider = new BizFrameProvider();
 
     X509Certificate certificate;
     PrivateKey privateKey;
 
-    @Getter
-    String rValue;
+    @Getter String rValue;
     @Getter static CeritificateManager instance = new CeritificateManager();
 
     private CeritificateManager() {
         try {
             Security.addProvider(bouncyCastleProvider);
+//            Security.addProvider(bizFrameProvider);
             initializeCertificate();
             initializePrivateKeyInfo();
         } catch (Exception e) {
@@ -56,11 +58,11 @@ public class CeritificateManager {
 
         try(InputStream inputStream = Files.newInputStream(Paths.get(privateKeyPath))) {
 
-//            KeyManager keyManager = KeyManager.getInstance(inputStream);
-//            keyManager.decrypt(userPassword);
-//
-//            rValue =  Base64.getEncoder().encodeToString(keyManager.getRandomNum());
-//            privateKey = keyManager.getPrivateKey();
+            KeyManager keyManager = KeyManager.getInstance(inputStream);
+            keyManager.decrypt(userPassword);
+
+            rValue =  Base64.getEncoder().encodeToString(keyManager.getRandomNum());
+            privateKey = keyManager.getPrivateKey();
 
         } catch (Exception e) {
             throw new IllegalStateException("error while initializing private key info, wrong password");
@@ -116,36 +118,11 @@ public class CeritificateManager {
     public String getPublicKeyPem() throws CertificateException, IOException {
         StringBuilder publicKeyPemBuilder = new StringBuilder();
 
-        String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
-        String END_CERT = "-----END CERTIFICATE-----";
-
-        publicKeyPemBuilder.append(BEGIN_CERT).append("\n");
+        publicKeyPemBuilder.append(X509Factory.BEGIN_CERT).append("\n");
         publicKeyPemBuilder.append(Base64.getMimeEncoder(64, new byte[]{'\n'}).encodeToString(certificate.getEncoded())).append("\n");
-        publicKeyPemBuilder.append(END_CERT).append("\n");
+        publicKeyPemBuilder.append(X509Factory.END_CERT).append("\n");
 
         return publicKeyPemBuilder.toString();
     }
 
-
-//    protected ClassicHttpRequest getHttpRequest(NpkiLogin npkiLogin) {
-//        try {
-//
-//            String signedData = generateAndVerifySignature(npkiLogin.getPkcEncSsn());
-//
-//            String logSignature = getLogSignature(npkiLogin.getPkcEncSsn(), signedData, certificate.getSerialNumber());
-//
-//            return ClassicRequestBuilder.post("https://www.hometax.go.kr/pubcLogin.do?domain=hometax.go.kr&mainSys=Y")
-//                    .setEntity(new UrlEncodedFormEntity(Arrays.asList(
-//                            new BasicNameValuePair("cert", getPublicKeyPem()),
-//                            new BasicNameValuePair("logSgnt", Base64.getEncoder().encodeToString(logSignature.getBytes())),
-//                            new BasicNameValuePair("pkcLgnClCd", "04"),
-//                            new BasicNameValuePair("pkcLoginYnImpv", "Y"),
-//                            new BasicNameValuePair("randomEnc", rValue)
-//                    )))
-//                    .build();
-//
-//        } catch (GeneralSecurityException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 }
