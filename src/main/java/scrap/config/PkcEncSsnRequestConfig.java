@@ -1,16 +1,16 @@
 package scrap.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import hs.http.HttpMethod;
-import hs.http.HttpResponseWrapper;
-import hs.type.HomeTax;
-import hs.util.CookieManager;
-import hs.vo.PkcEncSsnVO;
 import lombok.Getter;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
 import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import scrap.http.HttpMethod;
+import scrap.http.HttpResponseWrapper;
+import scrap.type.HomeTax;
+import scrap.util.CookieManager;
+import scrap.vo.PkcEncSsnVO;
 
 import java.util.Map;
 import java.util.function.Function;
