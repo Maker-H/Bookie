@@ -40,7 +40,7 @@ public class HttpResponseWrapper {
 
     public void printLog() {
         int statusCode = code;
-        System.out.println("================================ HTTP RESPONSE ================================");
+        System.out.println("\n================================ HTTP RESPONSE ================================");
         System.out.println("[Response Status Code]: " + statusCode);
 
         // 로그 출력: 헤더 정보
@@ -55,7 +55,7 @@ public class HttpResponseWrapper {
         } catch (Exception e) {
             System.err.println("[Response Body]: Failed to retrieve body - " + e.getMessage());
         }
-        System.out.println("===============================================================================");
+        System.out.println("===============================================================================\n");
     }
 
 }

@@ -55,7 +55,7 @@ public class HttpRequestExecutor {
 
         HttpClientResponseHandler<T> responseHandler = requestConfig.getResponseHandler();
 
-        getLog(httpHost, httpMethod, entity, clientContext, responseHandler);
+        printLog(httpHost, httpMethod, entity, clientContext, responseHandler);
 
         CloseableHttpClient client = HttpClientProvider.getHttpClient();
         try {
@@ -66,13 +66,13 @@ public class HttpRequestExecutor {
 
     }
 
-    private static <T> void getLog(HttpHost httpHost,
-                                   ClassicHttpRequest httpMethod,
-                                   AbstractHttpEntity entity,
-                                   HttpClientContext httpClientContext,
-                                   HttpClientResponseHandler<T> responseHandler) {
+    private static <T> void printLog(HttpHost httpHost,
+                                     ClassicHttpRequest httpMethod,
+                                     AbstractHttpEntity entity,
+                                     HttpClientContext httpClientContext,
+                                     HttpClientResponseHandler<T> responseHandler) {
 
-        System.out.println("================================ HTTP REQUEST ================================");
+        System.out.println("\n================================ HTTP REQUEST ================================");
         try {
             System.out.println("[Request Info]");
             System.out.println("   HTTP Method: " + httpMethod.getMethod());
@@ -97,6 +97,6 @@ public class HttpRequestExecutor {
                 System.err.println("error while making response info log");
             }
         }
-        System.out.println("===============================================================================");
+        System.out.println("===============================================================================\n");
     }
 }
