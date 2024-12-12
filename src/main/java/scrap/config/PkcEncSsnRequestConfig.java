@@ -50,8 +50,7 @@ public class PkcEncSsnRequestConfig extends BaseRequestConfig<PkcEncSsnVO> {
                 throw new RuntimeException("error while parsing pkcencssn");
             }
 
-            Header[] headers = responseWrapper.getHeaders("Set-Cookie");
-            BasicCookieStore pkcCookieStore = CookieManager.parseHeaders(headers);
+            BasicCookieStore pkcCookieStore =CookieManager.createCookieStoreFromHttpHeaders(responseWrapper.getHeaders());
 
             final String txpp = CookieManager.getCookieValue(pkcCookieStore, HomeTax.TXPPsessionID.name());
             final String wmonid = CookieManager.getCookieValue(pkcCookieStore, HomeTax.WMONID.name());

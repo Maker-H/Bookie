@@ -96,12 +96,8 @@ public abstract class BaseRequestConfig<T> {
 
     protected void initializeCookieResponseHandler() {
 
-        Function<HttpResponseWrapper, T> cookieResponse = responseWrapper -> {
-            Header[] headers = responseWrapper.getHeaders("Set-Cookie");
-            BasicCookieStore basicCookieStore = CookieManager.parseHeaders(headers);
-
-            return (T) basicCookieStore;
-        };
+        Function<HttpResponseWrapper, T> cookieResponse
+                = responseWrapper -> (T) CookieManager.createCookieStoreFromHttpHeaders(responseWrapper.getHeaders());
 
         createBaseResponseHandler(cookieResponse);
 

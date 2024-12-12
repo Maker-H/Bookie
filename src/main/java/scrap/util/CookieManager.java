@@ -5,6 +5,7 @@ import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.client5.http.impl.cookie.BasicClientCookie;
 import org.apache.hc.core5.http.Header;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,25 +37,19 @@ public class CookieManager {
                 .orElse("");
     }
 
-    public static BasicCookieStore parseHeaders(Header[] headers) {
+    public static BasicCookieStore createCookieStoreFromHttpHeaders(Header[] headers) {
 
         BasicCookieStore basicCookieStore = new BasicCookieStore();
 
-        for (Header header : headers) {
-            if (!header.getName().equals("Set-Cookie")) {
-                throw new IllegalStateException("cookie manager got wrong header, have to be 'Set-Cookie' header");
-            }
-
-            String cookieValue = header.getValue();
-
-            BasicClientCookie cookie = CookieManager.parseString(cookieValue);
-            basicCookieStore.addCookie(cookie);
-        }
+        Arrays.stream(headers)
+                .filter(header -> header.getName().equals("Set-Cookie"))
+                .map(header -> CookieManager.convertCookieHeaderToCookie(header.getValue()))
+                .forEach(basicCookieStore::addCookie);
 
         return basicCookieStore;
     }
 
-    public static BasicClientCookie parseString(String cookieHeader) {
+    public static BasicClientCookie convertCookieHeaderToCookie(String cookieHeader) {
 
         try {
             String[] cookieParts = cookieHeader.split(";");
