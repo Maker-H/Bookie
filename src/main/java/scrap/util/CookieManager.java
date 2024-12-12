@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class CookieManager {
 
-    public static Map<String, Cookie> getCookieMap(BasicCookieStore cookieStore) {
+    public static Map<String, Cookie> extractCookiesToMap(BasicCookieStore cookieStore) {
         List<Cookie> cookies = cookieStore.getCookies();
         Map<String, Cookie> cookieMap = new HashMap<>();
 
@@ -23,13 +23,13 @@ public class CookieManager {
         return cookieMap;
     }
 
-    public static Cookie addHomeTaxCookie(BasicClientCookie cookie) {
+    public static Cookie createHomeTaxCookie(BasicClientCookie cookie) {
         cookie.setDomain("www.hometax.go.kr");
         cookie.setPath("/");
         return cookie;
     }
 
-    public static String getCookieValue(BasicCookieStore cookieStore, String cookieName) {
+    public static String findCookieValue(BasicCookieStore cookieStore, String cookieName) {
         return cookieStore.getCookies().stream()
                 .filter(cookie -> cookie.getName().equals(cookieName))
                 .map(Cookie::getValue)

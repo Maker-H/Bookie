@@ -49,15 +49,13 @@ public abstract class BaseRequestConfig<T> {
             throw new IllegalStateException("Failed to create HTTP method instance: " + e.getMessage(), e);
         }
     }
-
-    protected void createBaseResponseHandler(Function<HttpResponseWrapper, T> handlerFunction) {
+    protected void createResponseHandler(Function<HttpResponseWrapper, T> handlerFunction) {
         this.responseHandler = httpResponse -> {
 
-            // 로그 출력: 상태 코드
             HttpResponseWrapper httpResponseWrapper = new HttpResponseWrapper(
                     httpResponse.getCode(),
                     httpResponse.getHeaders(),
-                    EntityUtils.toString(httpResponse.getEntity())
+                    httpResponse.getEntity()
             );
 
             httpResponseWrapper.printLog();
@@ -71,35 +69,37 @@ public abstract class BaseRequestConfig<T> {
         };
     }
 
-    protected void initializeStringResponseHandler() {
+    protected  Function<HttpResponseWrapper, T> initializeStringResponseHandler() {
 
-        Function<HttpResponseWrapper, T> stringFunction = responseWrapper -> (T) responseWrapper.getResponseBody();
+        Function<HttpResponseWrapper, T> stringFunction
+                = responseWrapper -> (T) responseWrapper.getResponseBody();
 
-        createBaseResponseHandler(stringFunction);
+        createResponseHandler(stringFunction);
 
+        return stringFunction;
     }
 
-    protected void initializeJsonNodeResponseHandler() {
+    protected Function<HttpResponseWrapper, T> initializeJsonNodeResponseHandler() {
 
         Function<HttpResponseWrapper, T> jsonFunction = responseWrapper -> {
             try {
-                String jsonResponse = responseWrapper.getResponseBody();
-                return (T) objectMapper.readTree(jsonResponse);
+                return (T) objectMapper.readTree(responseWrapper.getResponseBody());
             } catch (IOException e) {
                 throw new IllegalStateException("Failed to parse JSON response: " + e.getMessage(), e);
             }
         };
 
-        createBaseResponseHandler(jsonFunction);
+        createResponseHandler(jsonFunction);
 
+        return jsonFunction;
     }
 
     protected void initializeCookieResponseHandler() {
 
         Function<HttpResponseWrapper, T> cookieResponse
-                = responseWrapper -> (T) CookieManager.createCookieStoreFromHttpHeaders(responseWrapper.getHeaders());
+                = responseWrapper -> (T) CookieManager.createCookieStoreFromHttpHeaders(responseWrapper.getHeaders());;
 
-        createBaseResponseHandler(cookieResponse);
+        createResponseHandler(cookieResponse);
 
     }
 

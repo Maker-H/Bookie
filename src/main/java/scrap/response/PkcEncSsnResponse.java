@@ -1,4 +1,4 @@
-package scrap.vo;
+package scrap.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +10,11 @@ import java.util.Map;
 @Getter
 @ToString
 @AllArgsConstructor
-public class PkcEncSsnVO {
+public class PkcEncSsnResponse {
 
     private final String pkcEncSsn;
     private final String TXPPsessionID;
     private final String WMONID;
-    private final Map<String, Cookie> cookieMap;
+    private final Map<String, Cookie> cookies;
 
 }

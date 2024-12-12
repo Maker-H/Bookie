@@ -10,12 +10,11 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import java.io.IOException;
 import java.util.Arrays;
 
-@Getter
-@AllArgsConstructor
 public class HttpResponseWrapper {
-    private final int code;
+
+    @Getter private final int code;
+    @Getter private final String responseBody;
     private final Header[] headers;
-    private final String responseBody;
 
     public HttpResponseWrapper(int code, Header[] headers, HttpEntity entity) {
         this.code = code;
@@ -27,6 +26,10 @@ public class HttpResponseWrapper {
             throw new RuntimeException("error while parsing entity" + e.getMessage());
         }
 
+    }
+
+    public Header[] getHeaders() {
+        return headers;
     }
 
     public Header[] getHeaders(String name) {
@@ -54,5 +57,6 @@ public class HttpResponseWrapper {
         }
         System.out.println("===============================================================================");
     }
+
 }
 

@@ -1,4 +1,4 @@
-package scrap.vo;
+package scrap.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.Map;
 @Getter
 @ToString
 @AllArgsConstructor
-public class NpkiVO {
+public class NpkiResponse {
 
     private final String TXPPsessionID;
     private final String WMONID;

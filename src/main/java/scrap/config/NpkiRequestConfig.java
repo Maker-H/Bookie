@@ -15,8 +15,8 @@
 //import scrap.type.HomeTax;
 //import scrap.util.CeritificateManager;
 //import scrap.util.CookieManager;
-//import scrap.vo.NpkiVO;
-//import scrap.vo.PkcEncSsnVO;
+//import scrap.vo.NpkiResponse;
+//import scrap.vo.PkcEncSsnResponse;
 //
 //import java.io.IOException;
 //import java.security.GeneralSecurityException;
@@ -27,7 +27,7 @@
 //
 //
 //@Getter(value = AccessLevel.PACKAGE)
-//public class NpkiRequestConfig extends BaseRequestConfig<NpkiVO> {
+//public class NpkiRequestConfig extends BaseRequestConfig<NpkiResponse> {
 //
 //    private final String HTTP_PROTOCOL = "https";
 //    private final String HTTP_HOST = "www.hometax.go.kr";
@@ -43,32 +43,32 @@
 //
 //    private NpkiRequestConfig() {}
 //
-//    private NpkiRequestConfig(PkcEncSsnVO pkcEncSsnVO) {
+//    private NpkiRequestConfig(PkcEncSsnResponse pkcEncSsnVO) {
 //        initializeEntity(pkcEncSsnVO.getPkcEncSsn());
 //        initializeClientContext(pkcEncSsnVO.getCookieMap());
 //    }
 //
 //    public static NpkiRequestConfig createWithPkcEncSsn() {
-//        PkcEncSsnVO pkcEncSsnVO = HttpRequestExecutor.execute(new PkcEncSsnRequestConfig());
+//        PkcEncSsnResponse pkcEncSsnVO = HttpRequestExecutor.execute(new PkcEncSsnRequestConfig());
 //        return new NpkiRequestConfig(pkcEncSsnVO);
 //    }
 //
-//    public static NpkiRequestConfig createWithExistingPkcEncSsn(PkcEncSsnVO pkcEncSsnVO) {
+//    public static NpkiRequestConfig createWithExistingPkcEncSsn(PkcEncSsnResponse pkcEncSsnVO) {
 //        return new NpkiRequestConfig(pkcEncSsnVO);
 //    }
 //
 //    protected void initializeNpkiResponseHandler() {
 //
-//        Function<HttpResponseWrapper, NpkiVO> npkiResponse = responseWrapper -> {
+//        Function<HttpResponseWrapper, NpkiResponse> npkiResponse = responseWrapper -> {
 //            Header[] headers = responseWrapper.getHeaders("Set-Cookie");
 //            BasicCookieStore npkiCookieStore = CookieManager.parseHeaders(headers);
 //
-//            final String txpp = CookieManager.getCookieValue(npkiCookieStore, HomeTax.TXPPsessionID.name());
-//            final String wmonid = CookieManager.getCookieValue(npkiCookieStore, HomeTax.WMONID.name());
+//            final String txpp = CookieManager.findCookieValue(npkiCookieStore, HomeTax.TXPPsessionID.name());
+//            final String wmonid = CookieManager.findCookieValue(npkiCookieStore, HomeTax.WMONID.name());
 //
 //            Map<String, Cookie> cookieMap = CookieManager.getCookieMap(npkiCookieStore);
 //
-//            return new NpkiVO(txpp, wmonid, cookieMap);
+//            return new NpkiResponse(txpp, wmonid, cookieMap);
 //        };
 //
 //        createBaseResponseHandler(npkiResponse);
@@ -84,7 +84,7 @@
 //        }
 //
 //        BasicClientCookie cookie = new BasicClientCookie("NTS_LOGIN_SYSTEM_CODE_P", "TXPP");
-//        CookieManager.addHomeTaxCookie(cookie);
+//        CookieManager.createHomeTaxCookie(cookie);
 //        cookieStore.addCookie(cookie);
 //
 //

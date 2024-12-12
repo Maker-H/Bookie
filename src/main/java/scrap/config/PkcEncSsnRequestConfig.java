@@ -4,20 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
 import org.apache.hc.client5.http.cookie.Cookie;
-import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import scrap.http.HttpMethod;
 import scrap.http.HttpResponseWrapper;
+import scrap.response.PkcEncSsnResponse;
 import scrap.type.HomeTax;
 import scrap.util.CookieManager;
-import scrap.vo.PkcEncSsnVO;
 
 import java.util.Map;
 import java.util.function.Function;
 
 
 @Getter
-public class PkcEncSsnRequestConfig extends BaseRequestConfig<PkcEncSsnVO> {
+public class PkcEncSsnRequestConfig extends BaseRequestConfig<PkcEncSsnResponse> {
     private final String HTTP_PROTOCOL = "https";
     private final String HTTP_HOST = "www.hometax.go.kr";
     private final String HTTP_ENDPOINT = "/wqAction.do?actionId=ATXPPZXA001R01&screenId=UTXPPABA01";
@@ -40,7 +39,7 @@ public class PkcEncSsnRequestConfig extends BaseRequestConfig<PkcEncSsnVO> {
 
     private void initializePkcEncSsnResponseHandler() {
 
-        Function<HttpResponseWrapper, PkcEncSsnVO> pkcFunction = responseWrapper -> {
+        Function<HttpResponseWrapper, PkcEncSsnResponse> pkcFunction = responseWrapper -> {
 
 
             String pckEncSsn = null;
@@ -52,15 +51,15 @@ public class PkcEncSsnRequestConfig extends BaseRequestConfig<PkcEncSsnVO> {
 
             BasicCookieStore pkcCookieStore =CookieManager.createCookieStoreFromHttpHeaders(responseWrapper.getHeaders());
 
-            final String txpp = CookieManager.getCookieValue(pkcCookieStore, HomeTax.TXPPsessionID.name());
-            final String wmonid = CookieManager.getCookieValue(pkcCookieStore, HomeTax.WMONID.name());
+            final String txpp = CookieManager.findCookieValue(pkcCookieStore, HomeTax.TXPPsessionID.name());
+            final String wmonid = CookieManager.findCookieValue(pkcCookieStore, HomeTax.WMONID.name());
 
-            Map<String, Cookie> cookieMap = CookieManager.getCookieMap(pkcCookieStore);
+            Map<String, Cookie> cookieMap = CookieManager.extractCookiesToMap(pkcCookieStore);
 
-            return new PkcEncSsnVO(pckEncSsn, txpp, wmonid, cookieMap);
+            return new PkcEncSsnResponse(pckEncSsn, txpp, wmonid, cookieMap);
 
         };
 
-        createBaseResponseHandler(pkcFunction);
+        createResponseHandler(pkcFunction);
     }
 }
