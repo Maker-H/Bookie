@@ -1,5 +1,8 @@
 package scrap.http;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.hc.core5.http.Header;
@@ -38,24 +41,37 @@ public class HttpResponseWrapper {
                 .toArray(Header[]::new);
     }
 
-    public void printLog() {
-        int statusCode = code;
-        System.out.println("================================ HTTP RESPONSE ================================");
-        System.out.println("[Response Status Code]: " + statusCode);
 
-        // 로그 출력: 헤더 정보
+    public void printLog() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        System.out.println("\n================================ HTTP RESPONSE ================================");
+        System.out.println("[Response Status Code]: " + code);
+
         System.out.println("[Response Headers]");
         Arrays.stream(headers)
                 .forEach(header -> System.out.println("   " + header.getName() + ": " + header.getValue()));
 
-        // 로그 출력: 본문 정보
         try {
-            System.out.println("[Response Body]");
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+            String prettyString = jsonNode.toPrettyString();
+            System.out.println("   " + prettyString);
+
+            int jsonEndIndex = responseBody.indexOf(prettyString.trim()) + prettyString.trim().length();
+            if (jsonEndIndex <= responseBody.length()) {
+                String extraContent = responseBody.substring(jsonEndIndex).trim();
+                if (!extraContent.isEmpty()) {
+                    System.out.println("[Extra Content]");
+                    System.out.println("   " + extraContent);
+                }
+            }
+
+        } catch (JsonParseException e) {
             System.out.println("   " + responseBody);
-        } catch (Exception e) {
-            System.err.println("[Response Body]: Failed to retrieve body - " + e.getMessage());
+        }catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println("===============================================================================");
+        System.out.println("===============================================================================\n");
     }
 
 }

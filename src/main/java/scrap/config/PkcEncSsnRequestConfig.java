@@ -41,10 +41,13 @@ public class PkcEncSsnRequestConfig extends BaseRequestConfig<PkcEncSsnResponse>
 
         Function<HttpResponseWrapper, PkcEncSsnResponse> pkcFunction = responseWrapper -> {
 
-
-            String pckEncSsn = null;
+            String pckEncSsn;
             try {
                 pckEncSsn = objectMapper.readTree(responseWrapper.getResponseBody()).path(HomeTax.pkcEncSsn.name()).asText();
+
+                if (pckEncSsn.isEmpty()){
+                    throw new IllegalArgumentException("cannot get pkcEncSsn value whlie parsing response body in pkcEncSsn config");
+                }
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("error while parsing pkcencssn");
             }
