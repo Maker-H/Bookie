@@ -29,6 +29,12 @@ public class CookieManager {
         return cookie;
     }
 
+    public static Cookie createWatchaCookie(BasicClientCookie cookie) {
+        cookie.setDomain("pedia.watcha.com");
+        cookie.setPath("/");
+        return cookie;
+    }
+
     public static String findCookieValue(BasicCookieStore cookieStore, String cookieName) {
         return cookieStore.getCookies().stream()
                 .filter(cookie -> cookie.getName().equals(cookieName))

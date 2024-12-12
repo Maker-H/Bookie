@@ -16,6 +16,7 @@ import scrap.http.HttpResponseWrapper;
 import scrap.util.CookieManager;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 
@@ -49,6 +50,20 @@ public abstract class BaseRequestConfig<T> {
             throw new IllegalStateException("Failed to create HTTP method instance: " + e.getMessage(), e);
         }
     }
+
+    protected void initializeHttpMethod(Function<ClassicHttpRequest, ClassicHttpRequest> function) {
+        try {
+            Class<?> methodClass = Class.forName(getHTTP_METHOD().getClassName());
+            ClassicHttpRequest httpMethod =
+                    (ClassicHttpRequest) methodClass
+                            .getConstructor(String.class)
+                            .newInstance(getHTTP_ENDPOINT());
+            this.httpMethod = function.apply(httpMethod);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to create HTTP method instance: " + e.getMessage(), e);
+        }
+    }
+
     protected void createResponseHandler(Function<HttpResponseWrapper, T> handlerFunction) {
         this.responseHandler = httpResponse -> {
 

@@ -1,4 +1,4 @@
-package scrap.response;
+package scrap.referer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

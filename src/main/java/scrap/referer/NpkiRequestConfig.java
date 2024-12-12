@@ -12,7 +12,7 @@
 //import org.springframework.http.HttpMethod;
 //import scrap.http.HttpRequestExecutor;
 //import scrap.http.HttpResponseWrapper;
-//import scrap.type.HomeTax;
+//import scrap.referer.HomeTax;
 //import scrap.util.CeritificateManager;
 //import scrap.util.CookieManager;
 //import scrap.vo.NpkiResponse;

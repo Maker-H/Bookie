@@ -55,7 +55,7 @@ public class HttpResponseWrapper {
         try {
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             String prettyString = jsonNode.toPrettyString();
-            System.out.println("   " + prettyString);
+            System.out.println(prettyString);
 
             int jsonEndIndex = responseBody.indexOf(prettyString.trim()) + prettyString.trim().length();
             if (jsonEndIndex <= responseBody.length()) {

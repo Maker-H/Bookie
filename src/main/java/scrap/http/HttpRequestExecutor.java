@@ -58,7 +58,9 @@ public class HttpRequestExecutor {
 
         ClassicHttpRequest httpMethod = requestConfig.getHttpMethod();
         AbstractHttpEntity entity = requestConfig.getEntity();
-        httpMethod.setEntity(entity);
+        if (entity != null) {
+            httpMethod.setEntity(entity);
+        }
 
         HttpHost httpHost = requestConfig.getHttpHost();
         HttpClientContext clientContext = requestConfig.getClientContext();
@@ -117,7 +119,7 @@ public class HttpRequestExecutor {
 
                     JsonNode jsonNode = objectMapper.readTree(requestBody);
                     String prettyString = jsonNode.toPrettyString();
-                    System.out.println("   " + prettyString);
+                    System.out.println(prettyString);
 
                     int jsonEndIndex = requestBody.indexOf(prettyString.trim()) + prettyString.trim().length();
                     if (jsonEndIndex <= requestBody.length()) {
