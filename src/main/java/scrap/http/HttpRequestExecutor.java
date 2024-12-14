@@ -66,8 +66,23 @@ public class HttpRequestExecutor {
         HttpClientContext clientContext = requestConfig.getClientContext();
 
         HttpClientResponseHandler<T> responseHandler = requestConfig.getResponseHandler();
+        if (httpHost == null) {
+            throw new IllegalArgumentException("httpHost is null");
+        }
+        if (httpMethod == null) {
+            throw new IllegalArgumentException("httpMethod is null");
+        }
+        if (responseHandler == null) {
+            throw new IllegalArgumentException("response Hander is null");
+        }
 
-        printLog(httpHost, httpMethod, entity, clientContext);
+        printLog(
+                requestConfig.getImplClassName(),
+                httpHost,
+                httpMethod,
+                entity,
+                clientContext
+        );
 
         CloseableHttpClient client = HttpClientProvider.getHttpClient();
         try {
@@ -78,12 +93,13 @@ public class HttpRequestExecutor {
 
     }
 
-    private static <T> void printLog(HttpHost httpHost,
+    private static <T> void printLog(String implClassName,
+                                     HttpHost httpHost,
                                      ClassicHttpRequest httpMethod,
                                      AbstractHttpEntity entity,
                                      HttpClientContext clientContext) {
 
-        System.out.println("\n================================ HTTP REQUEST ================================");
+        System.out.printf("\n================================ %s HTTP REQUEST ================================\n", implClassName);
         try {
             System.out.println("[Request Info]");
             System.out.println("   HTTP Method: " + httpMethod.getMethod());
@@ -137,6 +153,8 @@ public class HttpRequestExecutor {
                 System.err.println("   Failed to log request body: " + e.getMessage());
             }
         }
-        System.out.println("===============================================================================\n");
+
+        System.out.printf("\n================================ END ================================\n");
+
     }
 }

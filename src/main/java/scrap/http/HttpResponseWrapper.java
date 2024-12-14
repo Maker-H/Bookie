@@ -1,6 +1,7 @@
 package scrap.http;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -17,9 +18,13 @@ public class HttpResponseWrapper {
 
     @Getter private final int code;
     @Getter private final String responseBody;
+    @Getter private JsonNode jsonNode;
     private final Header[] headers;
 
+    ObjectMapper objectMapper = new ObjectMapper();
+
     public HttpResponseWrapper(int code, Header[] headers, HttpEntity entity) {
+
         this.code = code;
         this.headers = headers;
         try {
@@ -27,6 +32,12 @@ public class HttpResponseWrapper {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
             throw new RuntimeException("error while parsing entity" + e.getMessage());
+        }
+
+        try {
+            this.jsonNode = objectMapper.readTree(responseBody);
+        } catch (JsonProcessingException e) {
+            System.out.println("no json involved");
         }
 
     }
@@ -43,7 +54,6 @@ public class HttpResponseWrapper {
 
 
     public void printLog() {
-        ObjectMapper objectMapper = new ObjectMapper();
 
         System.out.println("\n================================ HTTP RESPONSE ================================");
         System.out.println("[Response Status Code]: " + code);
@@ -52,26 +62,31 @@ public class HttpResponseWrapper {
         Arrays.stream(headers)
                 .forEach(header -> System.out.println("   " + header.getName() + ": " + header.getValue()));
 
-        try {
-            JsonNode jsonNode = objectMapper.readTree(responseBody);
-            String prettyString = jsonNode.toPrettyString();
-            System.out.println(prettyString);
 
-            int jsonEndIndex = responseBody.indexOf(prettyString.trim()) + prettyString.trim().length();
-            if (jsonEndIndex <= responseBody.length()) {
-                String extraContent = responseBody.substring(jsonEndIndex).trim();
-                if (!extraContent.isEmpty()) {
-                    System.out.println("[Extra Content]");
-                    System.out.println("   " + extraContent);
+        try {
+            System.out.println("[Response Body]");
+            if (jsonNode != null) {
+                String prettyString = jsonNode.toPrettyString();
+                System.out.println(prettyString);
+
+                int jsonEndIndex = responseBody.indexOf(prettyString.trim()) + prettyString.trim().length();
+                if (jsonEndIndex <= responseBody.length()) {
+                    String extraContent = responseBody.substring(jsonEndIndex).trim();
+                    if (!extraContent.isEmpty()) {
+                        System.out.println("[Extra Content]");
+                        System.out.println("   " + extraContent);
+                    }
                 }
+
+            } else {
+                System.out.println("   " + responseBody);
             }
 
-        } catch (JsonParseException e) {
-            System.out.println("   " + responseBody);
         }catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("   Failed to log request body: " + e.getMessage());
         }
-        System.out.println("===============================================================================\n");
+        System.out.println("\n================================ END ================================");
+
     }
 
 }
