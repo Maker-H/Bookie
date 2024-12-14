@@ -45,6 +45,7 @@ public class HttpClientProvider {
 
         HTTP_CLIENT = HttpClients.custom()
                 .setConnectionManager(poolingConnectionManager)
+                .disableRedirectHandling()
                 .build();
     }
 
