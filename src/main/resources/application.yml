@@ -1,5 +1,5 @@
 spring:
   application.name: bookie
   profiles.group:
-    memtest: dev-h2, dev-sql
-    devtest: dev-maria, dev-sql
+    memtest: dev-h2, dev-sqlLog
+    devtest: dev-maria, dev-sqlLog

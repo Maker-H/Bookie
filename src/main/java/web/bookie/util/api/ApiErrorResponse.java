@@ -34,7 +34,6 @@ public class ApiErrorResponse {
         this.time = LocalDateTime.now();
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
